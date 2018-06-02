@@ -1,0 +1,45 @@
+name: ls_extended
+version: 0.1
+lang: c
+std: 11
+compile_flags: -O2
+vars:
+  []
+license: bsd3
+author:
+  name: Electrux
+  email: ElectruxRedsworth@gmail.com
+libs:
+  []
+builds:
+  - name: ls_extended
+    type: bin
+    inc_flags: ""
+    lib_flags: ""
+    pre_exec: ""
+    main_src: src/main.c
+    other_src:
+      - src/(.*).c
+    exclude:
+      []
+  - name: colored_display_variadic_params
+    type: test
+    main_src: tests/colored_display_variadic_params.c
+    other_src:
+      - src/(.*).c
+    exclude:
+      - src/main.c
+  - name: colored_display_colors
+    type: test
+    main_src: tests/colored_display_colors.c
+    other_src:
+      - src/(.*).c
+    exclude:
+      - src/main.c
+  - name: colored_display_invalid_colors
+    type: test
+    main_src: tests/colored_display_invalid_colors.c
+    other_src:
+      - src/(.*).c
+    exclude:
+      - src/main.c
