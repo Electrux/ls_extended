@@ -137,12 +137,11 @@ static int display_loc_info( const char * path, const char * loc, size_t flags, 
 		if( S_ISLNK( st.st_mode ) ) {
 			struct stat lnk_st;
 			int _temp_res = get_link_original_stats( full_path, & lnk_st );
-			if( _temp_res != 0 ) {
-				display( "{p}Something went wrong in fetching information of {r}%s{0}, {p}error{0}: {s}%d\n", full_path, errno );
-				return errno;
-			}
 			const char * _icon = S_ISDIR( lnk_st.st_mode ) ? get_dir_icon( loc, true ) : get_file_icon( loc, true );
-			display_padded( max_file_len, "{y}%s  %s{0}", _icon, loc );
+
+			if( _temp_res != 0 ) display_padded( max_file_len, "{r}%s  %s{0}", _icon, loc );
+			else display_padded( max_file_len, "{y}%s  %s{0}", _icon, loc );
+
 			return SUCCESS;
 		}
 
@@ -205,29 +204,26 @@ static int display_loc_info( const char * path, const char * loc, size_t flags, 
 	display( "\t{w}%s", mtime );
 
 	// file/folder name
-	if( S_ISDIR( st.st_mode ) ) display( "\t{b}%s  %s", icon, loc );
+	if( S_ISDIR( st.st_mode ) ) {
+		display( "\t{b}%s  %s", icon, loc );
+	}
 	else if( S_ISLNK( st.st_mode ) ) {
 		struct stat lnk_st;
 		int _temp_res = get_link_original_stats( full_path, & lnk_st );
-		if( _temp_res != 0 ) {
-			display( "{p}Something went wrong in fetching information of {r}%s{0}, {p}error{0}: {s}%d\n", full_path, errno );
-			return errno;
-		}
 		const char * _icon = S_ISDIR( lnk_st.st_mode ) ? get_dir_icon( loc, true ) : get_file_icon( loc, true );
-		display( "\t{y}%s  %s" , _icon, loc );
-	}
-	else {
-		display( "\t{g}%s  %s", icon, loc );
-	}
 
-	// link info if it is a link
-	if( S_ISLNK( st.st_mode ) ) {
+		// link info for links
 		char buf[ 2048 ];
 		ssize_t len;
 		if( ( len = readlink( full_path, buf, sizeof( buf ) - 1 ) ) != -1 ) {
 			buf[ len ] = '\0';
-			display( " {m}-> {c}%s", buf );
 		}
+
+		if( _temp_res != 0 ) display_padded( max_file_len, "\t{y}%s  %s {m}-> {c}%s {y}[{r}dead link{y}]{0}", _icon, loc, buf );
+		else display( "\t{y}%s  %s" , _icon, loc );
+	}
+	else {
+		display( "\t{g}%s  %s", icon, loc );
 	}
 
 	display( "{0}\n" );
@@ -239,7 +235,6 @@ static int get_link_original_stats( const char * path, struct stat * new_st )
 	struct stat tmp_st;
 	int temp_res = lstat( path, & tmp_st );
 	if( temp_res != 0 ) {
-		display( "{p}Something went wrong in fetching information of {r}%s{0}, {p}error{0}: {s}%d\n", path, errno );
 		return errno;
 	}
 
