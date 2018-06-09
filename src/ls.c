@@ -8,7 +8,7 @@
 	before using or altering the project.
 */
 
-#if defined( __linux__ )
+#if defined __linux__ && defined __GNUC__ && !defined __clang__
 #define _BSD_SOURCE
 #endif
 
