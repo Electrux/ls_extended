@@ -33,7 +33,7 @@ size_t get_cmd_opts( const int argc, const char ** argv, char * location )
 			else if( argv[ i ][ j ] == 'd' ) flags |= OPT_D;
 			else if( argv[ i ][ j ] == 'f' ) flags |= OPT_F;
 			else if( argv[ i ][ j ] == 'g' ) flags |= OPT_G;
-			else if( argv[ i ][ j ] == 'h' ) flags |= OPT_H;
+			else if( argv[ i ][ j ] == 'h' || argv[ i ][ j ] == 'H' ) flags |= OPT_H;
 			else if( argv[ i ][ j ] == 'i' ) flags |= OPT_I;
 			else if( argv[ i ][ j ] == 'l' ) flags |= OPT_L;
 			else if( argv[ i ][ j ] == 't' ) flags |= OPT_T;
