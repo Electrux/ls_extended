@@ -52,3 +52,53 @@ builds:
       - src/(.*).c
     exclude:
       - src/main.c
+  - name: strvec_insert
+    type: test
+    inc_flags: ""
+    lib_flags: ""
+    pre_exec: ""
+    main_src: tests/strvec_insert.c
+    other_src:
+      - src/(.*).c
+    exclude:
+      - src/main.c
+  - name: strvec_delete
+    type: test
+    inc_flags: ""
+    lib_flags: ""
+    pre_exec: ""
+    main_src: tests/strvec_delete.c
+    other_src:
+      - src/(.*).c
+    exclude:
+      - src/main.c
+  - name: strvec_get
+    type: test
+    inc_flags: ""
+    lib_flags: ""
+    pre_exec: ""
+    main_src: tests/strvec_get.c
+    other_src:
+      - src/(.*).c
+    exclude:
+      - src/main.c
+  - name: strvec_count
+    type: test
+    inc_flags: ""
+    lib_flags: ""
+    pre_exec: ""
+    main_src: tests/strvec_count.c
+    other_src:
+      - src/(.*).c
+    exclude:
+      - src/main.c
+  - name: strvec_all
+    type: test
+    inc_flags: ""
+    lib_flags: ""
+    pre_exec: ""
+    main_src: tests/strvec_all.c
+    other_src:
+      - src/(.*).c
+    exclude:
+      - src/main.c
