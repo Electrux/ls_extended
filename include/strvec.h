@@ -29,9 +29,11 @@ int str_vec_add( struct str_vec * vec, const char * str );
 int str_vec_rem_loc( struct str_vec * vec, const size_t loc );
 int str_vec_rem_str( struct str_vec * vec, const char * str );
 
-const char * str_vec_get( struct str_vec * vec, const size_t loc );
-char * str_vec_get_dup( struct str_vec * vec, const size_t loc );
+const char * str_vec_get( const struct str_vec * vec, const size_t loc );
+char * str_vec_get_dup( const struct str_vec * vec, const size_t loc );
 
-size_t str_vec_get_count( struct str_vec * vec );
+size_t str_vec_get_count( const struct str_vec * vec );
+
+void str_vec_sort( struct str_vec * vec );
 
 #endif // STRVEC_H

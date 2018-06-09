@@ -20,6 +20,8 @@
 		return ret_val;						\
 	}
 
+// Used to compare strings for sorting
+static int compare_str( const void * a, const void * b );
 
 struct str_vec * str_vec_create()
 {
@@ -95,7 +97,7 @@ int str_vec_rem_str( struct str_vec * vec, const char * str )
 	return loc < 0 ? loc : str_vec_rem_loc( vec, loc );
 }
 
-const char * str_vec_get( struct str_vec * vec, const size_t loc )
+const char * str_vec_get( const struct str_vec * vec, const size_t loc )
 {
 	CHECK_NULL_VEC( vec, NULL );
 
@@ -107,7 +109,7 @@ const char * str_vec_get( struct str_vec * vec, const size_t loc )
 	return ( const char * )vec->data[ loc ];
 }
 
-char * str_vec_get_dup( struct str_vec * vec, const size_t loc )
+char * str_vec_get_dup( const struct str_vec * vec, const size_t loc )
 {
 	CHECK_NULL_VEC( vec, NULL );
 
@@ -119,8 +121,18 @@ char * str_vec_get_dup( struct str_vec * vec, const size_t loc )
 	return strdup( vec->data[ loc ] );
 }
 
-size_t str_vec_get_count( struct str_vec * vec )
+size_t str_vec_get_count( const struct str_vec * vec )
 {
 	CHECK_NULL_VEC( vec, 0 );
 	return vec->count;
+}
+
+void str_vec_sort( struct str_vec * vec )
+{
+	qsort( vec->data, vec->count, sizeof( const char * ), compare_str );
+}
+
+static int compare_str( const void * a, const void * b )
+{
+	return strcmp( * ( const char ** ) a, * ( const char ** ) b );
 }

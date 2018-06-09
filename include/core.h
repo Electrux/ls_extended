@@ -42,6 +42,7 @@ static const uint8_t VERSION_PATCH = 0;
 enum ERRORS {
 	SUCCESS,
 	LOC_NOT_OPENED,
+	STR_VEC_INIT_FAIL,
 };
 
 void split_file( const char * file, char * name, char * ext );
