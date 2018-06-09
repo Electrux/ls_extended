@@ -8,6 +8,10 @@
 	before using or altering the project.
 */
 
+#if defined( __GCC__ ) && defined( _linux_ )
+#define _BSD_SOURCE
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
