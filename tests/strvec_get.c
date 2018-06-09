@@ -28,6 +28,6 @@ int main()
 
 	fprintf( OUT_LOC, "=> Data at 11th position = %s\n", str_vec_get( strs, 12 ) );
 
-	str_vec_delete( strs );
+	str_vec_delete( & strs );
 	return 0;
 }

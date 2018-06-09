@@ -30,7 +30,5 @@ void display_help( const char * prog_name )
 	display( "\t{0}-{s}i {0} - {t}Shows inode numbers of all files{0}/{t}folders{0}, {e}can only be used with the {0}-{s}l {e}option{0}\n" );
 	display( "\t{0}-{s}l {0} - {t}Shows all files{0}/{t}directories in a list form with various information about them{0}\n" );
 
-	// TODO: tree format, and sorting
-	display( "\t{r}Under construction{0}: -{s}t {0} - {t}Shows the tree{0}\n" );
-	display( "\t{r}Under construction{0}: -{s}s {0} - {t}Sorts the output{0}\n" );
+	display( "\t{0}-{s}s {0} - {t}Sorts the output by directories first{0}\n" );
 }

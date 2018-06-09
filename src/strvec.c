@@ -33,14 +33,17 @@ struct str_vec * str_vec_create()
 	return temp;
 }
 
-int str_vec_delete( struct str_vec * vec )
+int str_vec_delete( struct str_vec ** vec )
 {
 	CHECK_NULL_VEC( vec, -2 );
-	for( int i = 0; i < ( int )vec->count; ++i ) {
-		free( vec->data[ i ] );
+	CHECK_NULL_VEC( * vec, -2 );
+	for( size_t i = 0; i < ( * vec )->count; ++i ) {
+		free( ( * vec )->data[ i ] );
 	}
-	free( vec->data );
-	free( vec );
+	free( ( * vec )->data );
+	free( * vec );
+
+	* vec = NULL;
 	return 0;
 }
 
@@ -57,6 +60,18 @@ int str_vec_add( struct str_vec * vec, const char * str )
 	return vec->count;
 }
 
+int str_vec_add_vec( struct str_vec * dest, const struct str_vec * src )
+{
+	CHECK_NULL_VEC( dest, -2 );
+	CHECK_NULL_VEC( src, -2 );
+
+	for( size_t i = 0; i < src->count; ++i ) {
+		str_vec_add( dest, src->data[ i ] );
+	}
+
+	return dest->count;
+}
+
 int str_vec_rem_loc( struct str_vec * vec, const size_t loc )
 {
 	CHECK_NULL_VEC( vec, -2 );
@@ -68,7 +83,7 @@ int str_vec_rem_loc( struct str_vec * vec, const size_t loc )
 
 	free( vec->data[ loc ] );
 
-	for( int i = loc; i < ( int )vec->count - 1; ++i ) {
+	for( size_t i = loc; i < vec->count - 1; ++i ) {
 		vec->data[ i ] = vec->data[ i + 1 ];
 	}
 	vec->data[ --vec->count ] = NULL;
@@ -87,7 +102,7 @@ int str_vec_rem_str( struct str_vec * vec, const char * str )
 
 	int loc = -1;
 
-	for( int i = 0; i < ( int )vec->count - 1; ++i ) {
+	for( size_t i = 0; i < vec->count - 1; ++i ) {
 		if( strcmp( vec->data[ i ], str ) == 0 ) {
 			loc = i;
 			break;

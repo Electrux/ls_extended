@@ -31,6 +31,7 @@ static int display_loc_info( const char * path, const char * loc, size_t flags, 
 static void get_file_size_formatted( const size_t size, char * res );
 static struct str_vec * generate_file_str_vec( DIR * dir, const size_t flags );
 static int get_max_file_len( const struct str_vec * locs );
+static void sort_list_dirs_first( struct str_vec * locs );
 
 // Length to accomodate the icons and tabs in non -l mode.
 // Should be = total length of icons, spaces and the ending /
@@ -79,7 +80,7 @@ int ls( const struct winsize * ws, const char * loc, size_t flags )
 		int pad_shift = items_per_line_ctr == ( max_items_per_line - 1 ) ? 0 : max_len_in_files;
 		int temp_res = display_loc_info( finaldir, str_vec_get( locs, i ), flags, pad_shift );
 		if( temp_res != 0 ) {
-			str_vec_delete( locs );
+			str_vec_delete( & locs );
 			return temp_res;
 		}
 		if( !( flags & OPT_L ) ) {
@@ -91,7 +92,7 @@ int ls( const struct winsize * ws, const char * loc, size_t flags )
 		}
 	}
 
-	str_vec_delete( locs );
+	str_vec_delete( & locs );
 
 	if( !( flags & OPT_F ) )
 		display( "\n" );
@@ -232,6 +233,9 @@ static struct str_vec * generate_file_str_vec( DIR * dir, const size_t flags )
 {
 	struct dirent * di;
 	struct str_vec * locs = str_vec_create();
+	struct str_vec * dir_locs;
+	if( flags & OPT_S ) dir_locs = str_vec_create();
+
 	if( locs == NULL ) {
 		display_err( "{p}Unable to create string vector {r}locs{0}\n" );
 		return NULL;
@@ -250,10 +254,19 @@ static struct str_vec * generate_file_str_vec( DIR * dir, const size_t flags )
 				continue;
 		}
 
-		str_vec_add( locs, di->d_name );
+		if( ( flags & OPT_S ) && di->d_type == DT_DIR ) str_vec_add( dir_locs, di->d_name );
+		else str_vec_add( locs, di->d_name );
 	}
 
 	str_vec_sort( locs );
+
+	if( flags & OPT_S ) {
+		str_vec_sort( dir_locs );
+		str_vec_add_vec( dir_locs, locs );
+		str_vec_delete( & locs );
+		locs = dir_locs;
+		dir_locs = NULL;
+	}
 
 	return locs;
 }

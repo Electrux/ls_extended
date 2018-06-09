@@ -37,6 +37,6 @@ int main()
 	int res3 = str_vec_rem_str( strs, "Hello World" );
 	fprintf( OUT_LOC, "=> Result = %d, New size = %zu\n", res3, str_vec_get_count( strs ) );
 
-	str_vec_delete( strs );
+	str_vec_delete( & strs );
 	return 0;
 }

@@ -33,6 +33,6 @@ int main()
 
 	fprintf( OUT_LOC, "Data count = %zu\n", str_vec_get_count( strs ) );
 
-	str_vec_delete( strs );
+	str_vec_delete( & strs );
 	return 0;
 }
