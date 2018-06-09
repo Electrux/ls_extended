@@ -9,7 +9,7 @@
 */
 
 #if defined __linux__ && defined __GNUC__ && !defined __clang__
-#define _BSD_SOURCE
+#define _DEFAULT_SOURCE
 #endif
 
 #include <stdio.h>
