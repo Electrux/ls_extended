@@ -10,13 +10,22 @@
 
 #include <stdarg.h>
 #include <string.h>
+#include <stdbool.h>
 
 #include "../include/core.h"
 
 #include "../include/icons.h"
 
-static const char * get_file_icon_by_ext( const char * ext );
-static const char * get_file_icon_by_name( const char * name );
+// Default file icon is text file or normal link file
+#define DEFAULT_FILE_ICON "\uf15c"
+#define DEFAULT_LINK_FILE_ICON "\uf481"
+// Default directory icon is normal directory or normal link directory
+#define DEFAULT_DIR_ICON  "\uf07c"
+#define DEFAULT_LINK_DIR_ICON "\uf482"
+
+
+static const char * get_file_icon_by_ext( const char * ext, const bool is_link );
+static const char * get_file_icon_by_name( const char * name, const bool is_link );
 
 static int is( const char * of, const int count, ... );
 static int contains( const char * of, const int count, ... );
@@ -24,30 +33,26 @@ static int contains( const char * of, const int count, ... );
 #define IS( of, ... ) is( of, PP_NARG( __VA_ARGS__ ), __VA_ARGS__)
 #define CONTAINS( of, ... ) contains( of, PP_NARG( __VA_ARGS__ ), __VA_ARGS__ )
 
-// Default file icon is text file
-#define DEFAULT_FILE_ICON "\uf15c"
-// Default directory icon is normal directory
-#define DEFAULT_DIR_ICON  "\uf07c"
-
-const char * get_file_icon( const char * file )
+const char * get_file_icon( const char * file, const bool is_link )
 {
 	char name[ 1000 ], ext[ 100 ];
 	split_file( file, name, ext );
 	if( strcmp( ext, "\0" ) != 0 ) {
-		const char * ext_icon = get_file_icon_by_ext( ext );
+		const char * ext_icon = get_file_icon_by_ext( ext, is_link );
 		if( strcmp( ext_icon, DEFAULT_FILE_ICON ) != 0 ) return ext_icon;
 	}
-	return get_file_icon_by_name( name );
+	return get_file_icon_by_name( name, is_link );
 }
 
-const char * get_dir_icon( const char * dir )
+const char * get_dir_icon( const char * dir, const bool is_link )
 {
 	if( CONTAINS( dir, ".git" ) ) return "\ue5fd";
 
+	if( is_link ) return DEFAULT_LINK_DIR_ICON;
 	return DEFAULT_DIR_ICON;
 }
 
-static const char * get_file_icon_by_ext( const char * ext )
+static const char * get_file_icon_by_ext( const char * ext, const bool is_link )
 {
 	// OS
 
@@ -91,12 +96,14 @@ static const char * get_file_icon_by_ext( const char * ext )
 	// Elixir
 	else if( IS( ext, "ex", "exs", "eex" ) ) return "\ue62d";
 
+	if( is_link ) return DEFAULT_LINK_FILE_ICON;
 	return DEFAULT_FILE_ICON;
 }
 
-static const char * get_file_icon_by_name( const char * name )
+static const char * get_file_icon_by_name( const char * name, const bool is_link )
 {
-
+	// TODO
+	if( is_link ) return DEFAULT_LINK_FILE_ICON;
 	return DEFAULT_FILE_ICON;
 }
 

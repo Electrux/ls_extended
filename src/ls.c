@@ -14,6 +14,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <string.h>
 #include <sys/ioctl.h>
 #include <sys/types.h>
@@ -33,6 +34,7 @@
 #include "../include/ls.h"
 
 static int display_loc_info( const char * path, const char * loc, size_t flags, const int max_file_len );
+static int get_link_original_stats( const char * path, struct stat * new_st );
 static void get_file_size_formatted( const size_t size, char * res );
 static struct str_vec * generate_file_str_vec( DIR * dir, const size_t flags );
 static int get_max_file_len( const struct str_vec * locs );
@@ -71,15 +73,17 @@ int ls( const struct winsize * ws, const char * loc, size_t flags )
 	if( locs == NULL ) return STR_VEC_INIT_FAIL;
 
 	int max_len_in_files = get_max_file_len( locs ) + EXTRA_ITEM_LEN;
-	// - 14 to compensate for the terminal color codes
+	// -1 for the first space on each line when not in -l mode
+	// -14 to compensate for the terminal color codes
 	// The color codes are not displayed but do account for padding ( i guess ),
 	// and hence must be manually handled
-	int max_items_per_line = ( int ) ws->ws_col / ( max_len_in_files - 14 );
+	int max_items_per_line = ( int ) ( ws->ws_col - 1 ) / ( max_len_in_files - 14 );
 	if( max_items_per_line < 1 ) max_items_per_line = 1;
 
 	int items_per_line_ctr = 0;
 
 	for( int i = 0; i < ( int )str_vec_get_count( locs ); ++i ) {
+		if( !( flags & OPT_L ) && items_per_line_ctr == 0 ) display( " " );
 		// don't pad shift if the item is last on the line since pad won't be needed
 		// in that case anyway
 		int pad_shift = items_per_line_ctr == ( max_items_per_line - 1 ) ? 0 : max_len_in_files;
@@ -122,7 +126,7 @@ static int display_loc_info( const char * path, const char * loc, size_t flags, 
 		return errno;
 	}
 
-	const char * icon = S_ISDIR( st.st_mode ) ? get_dir_icon( loc ) : get_file_icon( loc );
+	const char * icon = S_ISDIR( st.st_mode ) ? get_dir_icon( loc, false ) : get_file_icon( loc, false );
 
 	if( !( flags & OPT_L ) ) {
 		if( S_ISDIR( st.st_mode ) ) {
@@ -131,7 +135,14 @@ static int display_loc_info( const char * path, const char * loc, size_t flags, 
 		}
 
 		if( S_ISLNK( st.st_mode ) ) {
-			display_padded( max_file_len, "{y}%s  %s{0}", "\uf482", loc );
+			struct stat lnk_st;
+			int _temp_res = get_link_original_stats( full_path, & lnk_st );
+			if( _temp_res != 0 ) {
+				display( "{p}Something went wrong in fetching information of {r}%s{0}, {p}error{0}: {s}%d\n", full_path, errno );
+				return errno;
+			}
+			const char * _icon = S_ISDIR( lnk_st.st_mode ) ? get_dir_icon( loc, true ) : get_file_icon( loc, true );
+			display_padded( max_file_len, "{y}%s  %s{0}", _icon, loc );
 			return SUCCESS;
 		}
 
@@ -195,8 +206,19 @@ static int display_loc_info( const char * path, const char * loc, size_t flags, 
 
 	// file/folder name
 	if( S_ISDIR( st.st_mode ) ) display( "\t{b}%s  %s", icon, loc );
-	else if( S_ISLNK( st.st_mode ) ) display( "\t{y}%s  %s" ,"\uf482", loc );
-	else display( "\t{g}%s  %s", icon, loc );
+	else if( S_ISLNK( st.st_mode ) ) {
+		struct stat lnk_st;
+		int _temp_res = get_link_original_stats( full_path, & lnk_st );
+		if( _temp_res != 0 ) {
+			display( "{p}Something went wrong in fetching information of {r}%s{0}, {p}error{0}: {s}%d\n", full_path, errno );
+			return errno;
+		}
+		const char * _icon = S_ISDIR( lnk_st.st_mode ) ? get_dir_icon( loc, true ) : get_file_icon( loc, true );
+		display( "\t{y}%s  %s" , _icon, loc );
+	}
+	else {
+		display( "\t{g}%s  %s", icon, loc );
+	}
 
 	// link info if it is a link
 	if( S_ISLNK( st.st_mode ) ) {
@@ -209,6 +231,31 @@ static int display_loc_info( const char * path, const char * loc, size_t flags, 
 	}
 
 	display( "{0}\n" );
+	return SUCCESS;
+}
+
+static int get_link_original_stats( const char * path, struct stat * new_st )
+{
+	struct stat tmp_st;
+	int temp_res = lstat( path, & tmp_st );
+	if( temp_res != 0 ) {
+		display( "{p}Something went wrong in fetching information of {r}%s{0}, {p}error{0}: {s}%d\n", path, errno );
+		return errno;
+	}
+
+	if( S_ISLNK( tmp_st.st_mode ) ) {
+		char buf[ 2048 ];
+		ssize_t len;
+		strcpy( buf, "\0" );
+		if( ( len = readlink( path, buf, sizeof( buf ) - 1 ) ) != -1 ) {
+			buf[ len ] = '\0';
+			return get_link_original_stats( buf, new_st );
+		}
+
+		return LOC_NOT_OPENED;
+	}
+
+	memcpy( new_st, & tmp_st, sizeof( struct stat ) );
 	return SUCCESS;
 }
 
