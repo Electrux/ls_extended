@@ -8,6 +8,11 @@
 	before using or altering the project.
 */
 
+// Apparently, strdup must be explicitly enabled -_-
+#if defined __linux__ && defined __GNUC__ && !defined __clang__ && defined __STDC_ALLOC_LIB__
+#define __STDC_WANT_LIB_EXT2__ 1
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
