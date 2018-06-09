@@ -203,6 +203,7 @@ static int display_loc_info( const char * path, const char * loc, size_t flags, 
 	strftime( mtime, 30, "%h %e %H:%M", gmtime( & st.st_mtime ) );
 	display( "\t{w}%s", mtime );
 
+	bool is_dead_link = false;
 	// file/folder name
 	if( S_ISDIR( st.st_mode ) ) {
 		display( "\t{b}%s  %s", icon, loc );
@@ -219,11 +220,23 @@ static int display_loc_info( const char * path, const char * loc, size_t flags, 
 			buf[ len ] = '\0';
 		}
 
-		if( _temp_res != 0 ) display_padded( max_file_len, "\t{y}%s  %s {m}-> {c}%s {y}[{r}dead link{y}]{0}", _icon, loc, buf );
-		else display( "\t{y}%s  %s" , _icon, loc );
+		if( _temp_res != 0 ) is_dead_link = true;
+		display( "\t{y}%s  %s{0}" , _icon, loc );
 	}
 	else {
 		display( "\t{g}%s  %s", icon, loc );
+	}
+
+	// link info for links
+	if( S_ISLNK( st.st_mode ) ) {
+		char buf[ 2048 ];
+		ssize_t len;
+		if( ( len = readlink( full_path, buf, sizeof( buf ) - 1 ) ) != -1 ) {
+			buf[ len ] = '\0';
+		}
+
+		display( " {m}-> {c}%s{0}", buf );
+		if( is_dead_link ) display( " {y}[{r}dead link{y}]{0}" );
 	}
 
 	display( "{0}\n" );
