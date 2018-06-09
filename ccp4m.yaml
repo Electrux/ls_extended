@@ -24,6 +24,9 @@ builds:
       []
   - name: colored_display_variadic_params
     type: test
+    inc_flags: ""
+    lib_flags: ""
+    pre_exec: ""
     main_src: tests/colored_display_variadic_params.c
     other_src:
       - src/(.*).c
@@ -31,6 +34,9 @@ builds:
       - src/main.c
   - name: colored_display_colors
     type: test
+    inc_flags: ""
+    lib_flags: ""
+    pre_exec: ""
     main_src: tests/colored_display_colors.c
     other_src:
       - src/(.*).c
@@ -38,6 +44,9 @@ builds:
       - src/main.c
   - name: colored_display_invalid_colors
     type: test
+    inc_flags: ""
+    lib_flags: ""
+    pre_exec: ""
     main_src: tests/colored_display_invalid_colors.c
     other_src:
       - src/(.*).c

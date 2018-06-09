@@ -8,14 +8,10 @@
 	before using or altering the project.
 */
 
-#include <stdio.h>
+#ifndef ICONS_H
+#define ICONS_H
 
-#include "../include/core.h"
+const char * get_file_icon( const char * file );
+const char * get_dir_icon( const char * dir );
 
-int main()
-{
-	size_t max_st = ~0;
-	uint64_t max_ui64 = -1;
-	display_test( "Variadic: %s, %c, %d, %f, %zu, %llu\n", "str", 'c', 10, 12.4, max_st, max_ui64 );
-	return 0;
-}
+#endif // ICONS_H

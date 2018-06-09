@@ -8,14 +8,12 @@
 	before using or altering the project.
 */
 
-#include <stdio.h>
+#ifndef LS_H
+#define LS_H
 
-#include "../include/core.h"
+#include <stdlib.h>
+#include <sys/ioctl.h>
 
-int main()
-{
-	size_t max_st = ~0;
-	uint64_t max_ui64 = -1;
-	display_test( "Variadic: %s, %c, %d, %f, %zu, %llu\n", "str", 'c', 10, 12.4, max_st, max_ui64 );
-	return 0;
-}
+int ls( const struct winsize * ws, const char * loc, const size_t flags );
+
+#endif // LS_H
