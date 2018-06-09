@@ -28,6 +28,7 @@ size_t get_cmd_opts( const int argc, const char ** argv, char * location )
 		size_t len = strlen( argv[ i ] );
 		for( size_t j = 1; j <= len; ++j ) {
 			if( argv[ i ][ j ] == 'a' ) flags |= OPT_A;
+			else if( argv[ i ][ j ] == 'A' ) flags |= OPT_CAPS_A;
 			else if( argv[ i ][ j ] == 'd' ) flags |= OPT_D;
 			else if( argv[ i ][ j ] == 'f' ) flags |= OPT_F;
 			else if( argv[ i ][ j ] == 'g' ) flags |= OPT_G;
