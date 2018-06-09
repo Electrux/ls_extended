@@ -34,7 +34,7 @@
 #include "../include/ls.h"
 
 static int display_loc_info( const char * path, const char * loc, size_t flags, const int max_file_len );
-static int get_link_original_stats( const char * path, struct stat * new_st );
+static int get_link_original_stats( const char * path, struct stat * new_st, int * jumps );
 static void get_file_size_formatted( const size_t size, char * res );
 static struct str_vec * generate_file_str_vec( DIR * dir, const size_t flags );
 static int get_max_file_len( const struct str_vec * locs );
@@ -136,10 +136,11 @@ static int display_loc_info( const char * path, const char * loc, size_t flags, 
 
 		if( S_ISLNK( st.st_mode ) ) {
 			struct stat lnk_st;
-			int _temp_res = get_link_original_stats( full_path, & lnk_st );
+			int jumps = 0;
+			int _temp_res = get_link_original_stats( full_path, & lnk_st, & jumps );
 			const char * _icon = S_ISDIR( lnk_st.st_mode ) ? get_dir_icon( loc, true ) : get_file_icon( loc, true );
 
-			if( _temp_res != 0 ) display_padded( max_file_len, "{r}%s  %s{0}", _icon, loc );
+			if( _temp_res != 0 && jumps < 2 ) display_padded( max_file_len, "{r}%s  %s{0}", _icon, loc );
 			else display_padded( max_file_len, "{y}%s  %s{0}", _icon, loc );
 
 			return SUCCESS;
@@ -210,7 +211,8 @@ static int display_loc_info( const char * path, const char * loc, size_t flags, 
 	}
 	else if( S_ISLNK( st.st_mode ) ) {
 		struct stat lnk_st;
-		int _temp_res = get_link_original_stats( full_path, & lnk_st );
+		int jumps = 0;
+		int _temp_res = get_link_original_stats( full_path, & lnk_st, & jumps );
 		const char * _icon = S_ISDIR( lnk_st.st_mode ) ? get_dir_icon( loc, true ) : get_file_icon( loc, true );
 
 		// link info for links
@@ -220,7 +222,7 @@ static int display_loc_info( const char * path, const char * loc, size_t flags, 
 			buf[ len ] = '\0';
 		}
 
-		if( _temp_res != 0 ) is_dead_link = true;
+		if( _temp_res != 0 && jumps < 2 ) is_dead_link = true;
 		display( "\t{y}%s  %s{0}" , _icon, loc );
 	}
 	else {
@@ -243,7 +245,7 @@ static int display_loc_info( const char * path, const char * loc, size_t flags, 
 	return SUCCESS;
 }
 
-static int get_link_original_stats( const char * path, struct stat * new_st )
+static int get_link_original_stats( const char * path, struct stat * new_st, int * jumps )
 {
 	struct stat tmp_st;
 	int temp_res = lstat( path, & tmp_st );
@@ -252,12 +254,14 @@ static int get_link_original_stats( const char * path, struct stat * new_st )
 	}
 
 	if( S_ISLNK( tmp_st.st_mode ) ) {
+		* jumps += 1;
+
 		char buf[ 2048 ];
 		ssize_t len;
 		strcpy( buf, "\0" );
 		if( ( len = readlink( path, buf, sizeof( buf ) - 1 ) ) != -1 ) {
 			buf[ len ] = '\0';
-			return get_link_original_stats( buf, new_st );
+			return get_link_original_stats( buf, new_st, jumps );
 		}
 
 		return LOC_NOT_OPENED;
