@@ -8,6 +8,7 @@
 	before using or altering the project.
 */
 
+#include <stdint.h>
 #include <string.h>
 
 #include "../include/cmdopts.h"

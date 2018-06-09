@@ -12,6 +12,7 @@
 #define CORE_H
 
 #include <stdlib.h>
+#include <stdint.h>
 
 #define PP_NARG( ... )				\
 	PP_NARG_( __VA_ARGS__, PP_RSEQ_N() )
