@@ -8,6 +8,8 @@
 	before using or altering the project.
 */
 
+// The checking is NOT case sensitive
+
 #include <stdarg.h>
 #include <string.h>
 #include <stdbool.h>
@@ -30,7 +32,7 @@ static const char * get_file_icon_by_name( const char * name, const bool is_link
 static bool find_in( const char * of, const char * values, bool is_exact_match );
 
 #define IS( of, values ) find_in( of, values, true )
-#define CONTAINS( of, values ) find_in( of, values, false )
+#define BEGINS( of, values ) find_in( of, values, false )
 
 const char * get_file_icon( const char * file, const bool is_link )
 {
@@ -45,7 +47,25 @@ const char * get_file_icon( const char * file, const bool is_link )
 
 const char * get_dir_icon( const char * dir, const bool is_link )
 {
-	if( CONTAINS( dir, ".git" ) ) return "\ue5fd";
+	if( BEGINS( dir, ".git, git" ) ) return "\ue5fd";
+	else if( BEGINS( dir, ".trash, trash" ) ) return "\uf1f8";
+	else if( BEGINS( dir, ".bash" ) ) return "\ue795";
+	else if( BEGINS( dir, ".bundle, .gem" ) ) return "\ue739";
+	else if( BEGINS( dir, ".cargo, .rustup" ) ) return "\ue7a8";
+	else if( BEGINS( dir, ".config" ) ) return "\ue5fc";
+	else if( BEGINS( dir, ".docker" ) ) return "\uf308";
+	else if( BEGINS( dir, ".go" ) ) return "\ue626";
+	else if( BEGINS( dir, ".mix" ) ) return "\ue62d";
+	else if( BEGINS( dir, ".npm, node_modules" ) ) return "\ue719";
+	else if( BEGINS( dir, ".vs, .vscode" ) ) return "\ue70c";
+	else if( BEGINS( dir, ".weechat" ) ) return "\ufbee";
+	else if( BEGINS( dir, "application" ) ) return "\ufb13";
+	else if( BEGINS( dir, "desktop" ) ) return "\uf108";
+	else if( BEGINS( dir, "download" ) ) return "\uf74c";
+	else if( BEGINS( dir, "library" ) ) return "\uf830";
+	else if( BEGINS( dir, "movie" ) ) return "\uf880";
+	else if( BEGINS( dir, "music, songs, audio" ) ) return "\uf832";
+	else if( BEGINS( dir, "photo, picture" ) ) return "\uf03e";
 
 	if( is_link ) return DEFAULT_LINK_DIR_ICON;
 	return DEFAULT_DIR_ICON;
@@ -71,12 +91,13 @@ static const char * get_file_icon_by_ext( const char * ext, const bool is_link )
 
 	// Git
 
-	else if( CONTAINS( ext, "git" ) ) return "\uf7a3";
+	else if( BEGINS( ext, "git" ) ) return "\uf7a3";
 
 	// Terminal stuff
 
-	else if( CONTAINS( ext, "zsh, bash" ) ) return "\ue615";
-	else if( CONTAINS( ext, "vim" ) ) return "\ue7c5";
+	else if( IS( ext, "zsh, bash, sh" ) ) return "\ue795";
+	else if( BEGINS( ext, "zsh, bash" ) ) return "\ue615";
+	else if( BEGINS( ext, "vim" ) ) return "\ue7c5";
 
 	// Languages
 
@@ -90,14 +111,27 @@ static const char * get_file_icon_by_ext( const char * ext, const bool is_link )
 	else if( IS( ext, "clj, cljs, cljc, edn" ) ) return "\ue76a";
 	// Coffeescript
 	else if( IS( ext, "coffee, litcoffee" ) ) return "\ue751";
-	// TODO: Start working on languages starting with D
-
 	// Elixir
 	else if( IS( ext, "ex, exs, eex" ) ) return "\ue62d";
 	// Elm
 	else if( IS( ext, "elm" ) ) return "\ue62c";
 	// Erlang
 	else if( IS( ext, "erl, hrl" ) ) return "\ue7b1";
+	// F-Sharp
+	else if( IS( ext, "fs, fsi, fsscript" ) ) return "\ue7a7";
+	// Go
+	else if( IS( ext, "go" ) ) return "\ue626";
+	// Haskell
+	else if( IS( ext, "hs, lhs" ) ) return "\ue777";
+	// Java
+	else if( IS( ext, "java, class, jar" ) ) return "\ue738";
+	// JS
+	else if( IS( ext, "js" ) ) return "\ue74e";
+	// Julia
+	else if( IS( ext, "jl" ) ) return "\ue624";
+	// Lua
+	else if( IS( ext, "lua" ) ) return "\ue620";
+	// TODO: start from N
 
 	if( is_link ) return DEFAULT_LINK_FILE_ICON;
 	return DEFAULT_FILE_ICON;
@@ -105,7 +139,7 @@ static const char * get_file_icon_by_ext( const char * ext, const bool is_link )
 
 static const char * get_file_icon_by_name( const char * name, const bool is_link )
 {
-	if( CONTAINS( name, "LICENSE, license" ) ) return "\uf2c2";
+	if( BEGINS( name, "LICENSE, license" ) ) return "\uf2c2";
 	// TODO
 	if( is_link ) return DEFAULT_LINK_FILE_ICON;
 	return DEFAULT_FILE_ICON;
@@ -130,10 +164,10 @@ static bool find_in( const char * of, const char * values, bool is_exact_match )
 
 			tmp_str[ tmp_ctr ] = '\0';
 			if( is_exact_match ) {
-				if( strcmp( of, tmp_str ) == 0 ) return true;
+				if( strcasecmp( of, tmp_str ) == 0 ) return true;
 			}
 			else {
-				if( strncmp( of, tmp_str, strlen( tmp_str ) ) == 0 ) return true;
+				if( strncasecmp( of, tmp_str, strlen( tmp_str ) ) == 0 ) return true;
 			}
 			strcpy( tmp_str, "\0" );
 			tmp_ctr = 0;
