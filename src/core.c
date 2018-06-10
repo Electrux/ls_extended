@@ -169,7 +169,7 @@ void _display( const int padding, const int option, const char * fmt, ... )
 //   http://www.daemonology.net/blog/2008-06-05-faster-utf8-strlen.html
 //
 
-#define ONEMASK ((size_t)(-1) / 0xFF)
+#define ONEMASK ( ( size_t )( -1 ) / 0xFF )
 
 size_t utf8_strlen( const char * _s )
 {
@@ -179,46 +179,36 @@ size_t utf8_strlen( const char * _s )
 	unsigned char b;
 
 	/* Handle any initial misaligned bytes. */
-	for (s = _s; (uintptr_t)(s) & (sizeof(size_t) - 1); s++) {
-		b = *s;
-
+	for( s = _s; ( uintptr_t )( s ) & ( sizeof( size_t ) - 1 ); s++ ) {
+		b = * s;
 		/* Exit if we hit a zero byte. */
-		if (b == '\0')
-			goto done;
-
+		if( b == '\0' ) goto done;
 		/* Is this byte NOT the first byte of a character? */
-		count += (b >> 7) & ((~b) >> 6);
+		count += ( b >> 7 ) & ( ( ~b ) >> 6 );
 	}
 
 	/* Handle complete blocks. */
-	for (; ; s += sizeof(size_t)) {
+	for( ; ; s += sizeof( size_t ) ) {
 		/* Prefetch 256 bytes ahead. */
-		__builtin_prefetch(&s[256], 0, 0);
-
+		__builtin_prefetch( & s[ 256 ], 0, 0 );
 		/* Grab 4 or 8 bytes of UTF-8 data. */
-		u = *(size_t *)(s);
-
+		u = * ( size_t * )( s );
 		/* Exit the loop if there are any zero bytes. */
-		if ((u - ONEMASK) & (~u) & (ONEMASK * 0x80))
-			break;
-
+		if( ( u - ONEMASK ) & ( ~u ) & ( ONEMASK * 0x80 ) ) break;
 		/* Count bytes which are NOT the first byte of a character. */
-		u = ((u & (ONEMASK * 0x80)) >> 7) & ((~u) >> 6);
-		count += (u * ONEMASK) >> ((sizeof(size_t) - 1) * 8);
+		u = ( ( u & ( ONEMASK * 0x80 ) ) >> 7 ) & ( ( ~u ) >> 6 );
+		count += ( u * ONEMASK ) >> ( ( sizeof( size_t ) - 1 ) * 8 );
 	}
 
 	/* Take care of any left-over bytes. */
-	for (; ; s++) {
-		b = *s;
-
+	for( ; ; s++ ) {
+		b = * s;
 		/* Exit if we hit a zero byte. */
-		if (b == '\0')
-			break;
-
+		if ( b == '\0' ) break;
 		/* Is this byte NOT the first byte of a character? */
-		count += (b >> 7) & ((~b) >> 6);
+		count += ( b >> 7 ) & ( ( ~b ) >> 6 );
 	}
 
 done:
-	return ((s - _s) - count);
+	return ( ( s - _s ) - count );
 }
