@@ -44,4 +44,6 @@ void _display( const int padding, const int option, const char * fmt, ... );
 #define display_test( ... ) _display( 0, 2, __VA_ARGS__ )
 #define display_padded( padding, ... ) _display( padding, 0, __VA_ARGS__ )
 
+size_t space_for_each_utf8_char( const char * str, char * res );
+
 #endif // CORE_H

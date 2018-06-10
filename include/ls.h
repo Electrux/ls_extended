@@ -11,8 +11,25 @@
 #ifndef LS_H
 #define LS_H
 
+#if defined __linux__ && defined __GNUC__ && !defined __clang__
+#define _DEFAULT_SOURCE
+#endif
+
 #include <stdlib.h>
+#include <stdbool.h>
 #include <sys/ioctl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
+struct stat_info
+{
+	struct stat st;
+	bool lnk_is_dead;
+	int lnk_jumps;
+	char lnk_loc[ 1024 ];
+	struct stat lnk_st;
+};
 
 int ls( const struct winsize * ws, const char * loc, const size_t flags );
 

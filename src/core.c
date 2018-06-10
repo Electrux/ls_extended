@@ -164,3 +164,21 @@ void _display( const int padding, const int option, const char * fmt, ... )
 
 	free( res_str );
 }
+
+size_t space_for_each_utf8_char( const char * str, char * res )
+{
+	int utf_count = 0;
+	int i = 0;
+	while( str[ i ] != '\0' ) {
+		if( ( str[ i ] & 0xC0 ) == 0x80 ) ++utf_count;
+		res[ i ] = str[ i ];
+		++i;
+	}
+
+	for( int j = 0; j < utf_count * 3; ++j ) {
+		res[ i++ ] = ' ';
+	}
+
+	res[ i ] = '\0';
+	return utf_count;
+}

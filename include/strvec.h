@@ -27,6 +27,8 @@ int str_vec_delete( struct str_vec ** vec );
 int str_vec_add( struct str_vec * vec, const char * str );
 int str_vec_add_vec( struct str_vec * dest, const struct str_vec * src );
 
+int str_vec_repl( struct str_vec * vec, const size_t loc, const char * new_str );
+
 int str_vec_rem_loc( struct str_vec * vec, const size_t loc );
 int str_vec_rem_str( struct str_vec * vec, const char * str );
 

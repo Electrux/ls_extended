@@ -34,14 +34,14 @@
 #include "../include/ls.h"
 
 static int display_loc_info( const char * path, const char * loc, size_t flags, const int max_file_len );
-static int get_link_original_stats( const char * path, struct stat * new_st, int * jumps );
-static void get_file_size_formatted( const size_t size, char * res );
+static int get_stats( const char * path, struct stat_info * stats );
+static void format_file_size( const size_t size, char * res );
 static struct str_vec * generate_file_str_vec( DIR * dir, const size_t flags );
-static int get_max_file_len( const struct str_vec * locs );
+static int get_max_file_len( struct str_vec * locs );
 static void sort_list_dirs_first( struct str_vec * locs );
 
 // Length to accomodate the icons and tabs in non -l mode.
-// Should be = total length of icons, spaces and the ending /
+// Should be = total length of icons, spaces, the ending /, and null terminator
 // + 14 ( for the terminal color codes )
 #define EXTRA_ITEM_LEN 20
 
@@ -116,37 +116,42 @@ int ls( const struct winsize * ws, const char * loc, size_t flags )
 // yellow - symlinks
 static int display_loc_info( const char * path, const char * loc, size_t flags, const int max_file_len )
 {
-	struct stat st;
+	struct stat_info stats;
+	stats.lnk_is_dead = false;
+	stats.lnk_jumps = 0;
+	strcpy( stats.lnk_loc, "\0" );
+
 	char full_path[ 1024 ];
 	strcpy( full_path, path );
 	strcat( full_path, loc );
-	int temp_res = lstat( full_path, & st );
+
+	int temp_res = get_stats( full_path, & stats );
 	if( temp_res != 0 ) {
 		display( "{p}Something went wrong in fetching information of {r}%s{0}, {p}error{0}: {s}%d\n", full_path, errno );
 		return errno;
 	}
 
-	const char * icon = S_ISDIR( st.st_mode ) ? get_dir_icon( loc, false ) : get_file_icon( loc, false );
+	char icon[ 10 ];
+	if( S_ISDIR( stats.lnk_st.st_mode ) ) strcpy( icon, get_dir_icon( loc, S_ISLNK( stats.st.st_mode ) ) );
+	else strcpy( icon, get_file_icon( loc, S_ISLNK( stats.st.st_mode ) ) );
+
+	// add spaces for utf strings
+	char utf_loc[ 1024 ];
+	space_for_each_utf8_char( loc, utf_loc );
 
 	if( !( flags & OPT_L ) ) {
-		if( S_ISDIR( st.st_mode ) ) {
-			display_padded( max_file_len, "{b}%s  %s/{0}", icon, loc );
+		if( S_ISDIR( stats.st.st_mode ) ) {
+			display_padded( max_file_len, "{b}%s  %s/{0}", icon, utf_loc );
 			return SUCCESS;
 		}
 
-		if( S_ISLNK( st.st_mode ) ) {
-			struct stat lnk_st;
-			int jumps = 0;
-			int _temp_res = get_link_original_stats( full_path, & lnk_st, & jumps );
-			const char * _icon = S_ISDIR( lnk_st.st_mode ) ? get_dir_icon( loc, true ) : get_file_icon( loc, true );
-
-			if( _temp_res != 0 && jumps < 2 ) display_padded( max_file_len, "{r}%s  %s{0}", _icon, loc );
-			else display_padded( max_file_len, "{y}%s  %s{0}", _icon, loc );
-
+		if( S_ISLNK( stats.st.st_mode ) ) {
+			if( stats.lnk_is_dead ) display_padded( max_file_len, "{r}%s  %s{0}", icon, utf_loc );
+			else display_padded( max_file_len, "{y}%s  %s{0}", icon, utf_loc );
 			return SUCCESS;
 		}
 
-		display_padded( max_file_len, "{g}%s  %s{0}", icon, loc );
+		display_padded( max_file_len, "{g}%s  %s{0}", icon, utf_loc );
 		return SUCCESS;
 	}
 
@@ -155,123 +160,111 @@ static int display_loc_info( const char * path, const char * loc, size_t flags, 
 	display( " " );
 
 	// inode number
-	if( flags & OPT_I ) {
-		display_padded( 12, "%llu", st.st_ino );
-	}
+	if( flags & OPT_I ) display_padded( 12, "%llu", stats.st.st_ino );
 
 	// directory/link/file
-	if( S_ISDIR( st.st_mode ) ) display( "{b}d" );
-	else if( S_ISLNK( st.st_mode ) ) display( "{b}l" );
+	if( S_ISDIR( stats.st.st_mode ) ) display( "{b}d" );
+	else if( S_ISLNK( stats.st.st_mode ) ) display( "{b}l" );
 	else display( "{0}-" );
 
 	// permissions
-	display( ( st.st_mode & S_IRUSR ) ? "{m}r" : "{0}-" );
-	display( ( st.st_mode & S_IWUSR ) ? "{c}w" : "{0}-" );
-	display( ( st.st_mode & S_IXUSR ) ? "{r}x" : "{0}-" );
-	display( ( st.st_mode & S_IRGRP ) ? "{m}r" : "{0}-" );
-	display( ( st.st_mode & S_IWGRP ) ? "{c}w" : "{0}-" );
-	display( ( st.st_mode & S_IXGRP ) ? "{r}x" : "{0}-" );
-	display( ( st.st_mode & S_IROTH ) ? "{m}r" : "{0}-" );
-	display( ( st.st_mode & S_IWOTH ) ? "{c}w" : "{0}-" );
-	display( ( st.st_mode & S_IXOTH ) ? "{r}x" : "{0}-" );
+	display( ( stats.st.st_mode & S_IRUSR ) ? "{m}r" : "{0}-" );
+	display( ( stats.st.st_mode & S_IWUSR ) ? "{c}w" : "{0}-" );
+	display( ( stats.st.st_mode & S_IXUSR ) ? "{r}x" : "{0}-" );
+	display( ( stats.st.st_mode & S_IRGRP ) ? "{m}r" : "{0}-" );
+	display( ( stats.st.st_mode & S_IWGRP ) ? "{c}w" : "{0}-" );
+	display( ( stats.st.st_mode & S_IXGRP ) ? "{r}x" : "{0}-" );
+	display( ( stats.st.st_mode & S_IROTH ) ? "{m}r" : "{0}-" );
+	display( ( stats.st.st_mode & S_IWOTH ) ? "{c}w" : "{0}-" );
+	display( ( stats.st.st_mode & S_IXOTH ) ? "{r}x" : "{0}-" );
 
 	// number of links
 	if( flags & OPT_I ) display( "\t" );
-	display( "\t{0}%d\t", st.st_nlink );
+	display( "\t{0}%d\t", stats.st.st_nlink );
 
 	// user and group
-	struct passwd * usr = getpwuid( st.st_uid );
-	struct group * grp = getgrgid( st.st_gid );
+	struct passwd * usr = getpwuid( stats.st.st_uid );
+	struct group * grp = getgrgid( stats.st.st_gid );
 
-	if( usr == NULL ) display_padded( 14, "{g}%d", st.st_uid );
+	if( usr == NULL ) display_padded( 14, "{g}%d", stats.st.st_uid );
 	else display_padded( 15, "{g}%s", usr->pw_name );
 
-	if( grp == NULL ) display( "\t{g}%d", st.st_gid );
+	if( grp == NULL ) display( "\t{g}%d", stats.st.st_gid );
 	else display( "\t{g}%s", grp->gr_name );
 
 	// file size
 	if( flags & OPT_H ) {
 		char size[ 30 ];
-		get_file_size_formatted( st.st_size, size );
+		format_file_size( stats.st.st_size, size );
 		display( "\t{y}%s", size );
 	}
 	else {
-		display( "\t{y}%lluB", st.st_size );
+		display( "\t{y}%lluB", stats.st.st_size );
 	}
 
 	// last modified time
 	char mtime[ 30 ];
-	strftime( mtime, 30, "%h %e %H:%M", gmtime( & st.st_mtime ) );
+	strftime( mtime, 30, "%h %e %H:%M", gmtime( & stats.st.st_mtime ) );
 	display( "\t{w}%s", mtime );
 
-	bool is_dead_link = false;
 	// file/folder name
-	if( S_ISDIR( st.st_mode ) ) {
-		display( "\t{b}%s  %s", icon, loc );
+	if( S_ISDIR( stats.st.st_mode ) ) {
+		display( "\t{b}%s  %s", icon, utf_loc );
 	}
-	else if( S_ISLNK( st.st_mode ) ) {
-		struct stat lnk_st;
-		int jumps = 0;
-		int _temp_res = get_link_original_stats( full_path, & lnk_st, & jumps );
-		const char * _icon = S_ISDIR( lnk_st.st_mode ) ? get_dir_icon( loc, true ) : get_file_icon( loc, true );
-
-		// link info for links
-		char buf[ 2048 ];
-		ssize_t len;
-		if( ( len = readlink( full_path, buf, sizeof( buf ) - 1 ) ) != -1 ) {
-			buf[ len ] = '\0';
-		}
-
-		if( _temp_res != 0 && jumps < 2 ) is_dead_link = true;
-		display( "\t{y}%s  %s{0}" , _icon, loc );
+	else if( S_ISLNK( stats.st.st_mode ) ) {
+		display( "\t{y}%s  %s{0}" , icon, utf_loc );
 	}
 	else {
-		display( "\t{g}%s  %s", icon, loc );
+		display( "\t{g}%s  %s", icon, utf_loc );
 	}
 
 	// link info for links
-	if( S_ISLNK( st.st_mode ) ) {
-		char buf[ 2048 ];
-		ssize_t len;
-		if( ( len = readlink( full_path, buf, sizeof( buf ) - 1 ) ) != -1 ) {
-			buf[ len ] = '\0';
-		}
-
-		display( " {m}-> {c}%s{0}", buf );
-		if( is_dead_link ) display( " {y}[{r}dead link{y}]{0}" );
+	if( S_ISLNK( stats.st.st_mode ) ) {
+		display( " {m}-> {c}%s{0}", stats.lnk_loc );
+		if( stats.lnk_is_dead ) display( " {y}[{r}dead link{y}]{0}" );
 	}
 
 	display( "{0}\n" );
 	return SUCCESS;
 }
 
-static int get_link_original_stats( const char * path, struct stat * new_st, int * jumps )
+static int get_stats( const char * path, struct stat_info * stats )
 {
 	struct stat tmp_st;
 	int temp_res = lstat( path, & tmp_st );
-	if( temp_res != 0 ) {
+	if( stats->lnk_jumps == 0 ) memcpy( & stats->st, & tmp_st, sizeof( struct stat ) );
+
+	if( stats->lnk_jumps == 0 && temp_res != 0 ) {
 		return errno;
 	}
 
+	if( stats->lnk_jumps == 1 && temp_res != 0 ) {
+		stats->lnk_is_dead = true;
+		// set the link stats to be same as the file's stats
+		memcpy( & stats->lnk_st, & stats->st, sizeof( struct stat ) );
+		return SUCCESS;
+	}
+
 	if( S_ISLNK( tmp_st.st_mode ) ) {
-		* jumps += 1;
+		stats->lnk_jumps += 1;
 
 		char buf[ 2048 ];
 		ssize_t len;
 		strcpy( buf, "\0" );
 		if( ( len = readlink( path, buf, sizeof( buf ) - 1 ) ) != -1 ) {
 			buf[ len ] = '\0';
-			return get_link_original_stats( buf, new_st, jumps );
+			if( stats->lnk_jumps == 1 ) strcpy( stats->lnk_loc, buf );
+			return get_stats( buf, stats );
 		}
 
 		return LOC_NOT_OPENED;
 	}
 
-	memcpy( new_st, & tmp_st, sizeof( struct stat ) );
+	memcpy( & stats->lnk_st, & tmp_st, sizeof( struct stat ) );
 	return SUCCESS;
 }
 
-static void get_file_size_formatted( const size_t size, char * res )
+static void format_file_size( const size_t size, char * res )
 {
 	float size_res = ( float )size;
 	if( size < 1024 ) {
@@ -335,7 +328,7 @@ static struct str_vec * generate_file_str_vec( DIR * dir, const size_t flags )
 	return locs;
 }
 
-static int get_max_file_len( const struct str_vec * locs )
+static int get_max_file_len( struct str_vec * locs )
 {
 	int max_len = 0;
 	for( int i = 0; i < ( int )locs->count; ++i ) {

@@ -79,6 +79,20 @@ int str_vec_add_vec( struct str_vec * dest, const struct str_vec * src )
 	return dest->count;
 }
 
+int str_vec_repl( struct str_vec * vec, const size_t loc, const char * new_str )
+{
+	CHECK_NULL_VEC( vec, - 2 );
+	if( loc >= vec->count ) {
+		fprintf( stderr, "Provided loc %zu, max index is %zu\n", loc, vec->count - 1 );
+		return -1;
+	}
+
+	free( vec->data[ loc ] );
+	vec->data[ loc ] = strdup( new_str );
+
+	return vec->count;
+}
+
 int str_vec_rem_loc( struct str_vec * vec, const size_t loc )
 {
 	CHECK_NULL_VEC( vec, -2 );
