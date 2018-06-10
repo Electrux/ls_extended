@@ -165,23 +165,9 @@ void _display( const int padding, const int option, const char * fmt, ... )
 	free( res_str );
 }
 
-size_t space_for_each_utf8_char( const char * str, char * res )
-{
-	int utf_count = 0;
-	int i = 0;
-	while( str[ i ] != '\0' ) {
-		if( ( str[ i ] & 0xC0 ) == 0x80 ) ++utf_count;
-		res[ i ] = str[ i ];
-		++i;
-	}
-
-	for( int j = 0; j < utf_count; ++j ) {
-		res[ i++ ] = ' ';
-	}
-
-	res[ i ] = '\0';
-	return utf_count;
-}
+// The code below is courtesy of:
+//   http://www.daemonology.net/blog/2008-06-05-faster-utf8-strlen.html
+//
 
 #define ONEMASK ((size_t)(-1) / 0xFF)
 
@@ -236,4 +222,3 @@ size_t utf8_strlen( const char * _s )
 done:
 	return ((s - _s) - count);
 }
-
