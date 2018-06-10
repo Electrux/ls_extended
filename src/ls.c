@@ -136,22 +136,21 @@ static int display_loc_info( const char * path, const char * loc, size_t flags, 
 	else strcpy( icon, get_file_icon( loc, S_ISLNK( stats.st.st_mode ) ) );
 
 	// add spaces for utf strings
-	char utf_loc[ 1024 ];
-	space_for_each_utf8_char( loc, utf_loc );
+	int utf_spaces = strlen( loc ) - utf8_strlen( loc );
 
 	if( !( flags & OPT_L ) ) {
 		if( S_ISDIR( stats.st.st_mode ) ) {
-			display_padded( max_file_len, "{b}%s  %s/{0}", icon, utf_loc );
+			display_padded( max_file_len + utf_spaces, "{b}%s  %s/{0}", icon, loc );
 			return SUCCESS;
 		}
 
 		if( S_ISLNK( stats.st.st_mode ) ) {
-			if( stats.lnk_is_dead ) display_padded( max_file_len, "{r}%s  %s{0}", icon, utf_loc );
-			else display_padded( max_file_len, "{y}%s  %s{0}", icon, utf_loc );
+			if( stats.lnk_is_dead ) display_padded( max_file_len + utf_spaces, "{r}%s  %s{0}", icon, loc );
+			else display_padded( max_file_len + utf_spaces, "{y}%s  %s{0}", icon, loc );
 			return SUCCESS;
 		}
 
-		display_padded( max_file_len, "{g}%s  %s{0}", icon, utf_loc );
+		display_padded( max_file_len + utf_spaces, "{g}%s  %s{0}", icon, loc );
 		return SUCCESS;
 	}
 
@@ -209,13 +208,13 @@ static int display_loc_info( const char * path, const char * loc, size_t flags, 
 
 	// file/folder name
 	if( S_ISDIR( stats.st.st_mode ) ) {
-		display( "\t{b}%s  %s", icon, utf_loc );
+		display( "\t{b}%s  %s", icon, loc );
 	}
 	else if( S_ISLNK( stats.st.st_mode ) ) {
-		display( "\t{y}%s  %s{0}" , icon, utf_loc );
+		display( "\t{y}%s  %s{0}" , icon, loc );
 	}
 	else {
-		display( "\t{g}%s  %s", icon, utf_loc );
+		display( "\t{g}%s  %s", icon, loc );
 	}
 
 	// link info for links
@@ -332,7 +331,7 @@ static int get_max_file_len( struct str_vec * locs )
 {
 	int max_len = 0;
 	for( int i = 0; i < ( int )locs->count; ++i ) {
-		int len = strlen( str_vec_get( locs, i ) );
+		int len = utf8_strlen( str_vec_get( locs, i ) );
 		if( max_len < len ) max_len = len;
 	}
 
