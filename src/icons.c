@@ -82,7 +82,7 @@ static const char * get_file_icon_by_ext( const char * ext, const bool is_link )
 
 	else if( IS( ext, "json" ) ) return "\ufb25";
 	else if( IS( ext, "lock" ) ) return "\uf023";
-	else if( IS( ext, "ini, yaml, yml" ) ) return "\ue615";
+	else if( IS( ext, "ini, yaml, yml, env" ) ) return "\ue615";
 
 	// Data handling / manipulation
 
