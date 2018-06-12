@@ -11,8 +11,26 @@ I recommend the *Mononoki Nerd font* for the characters, and *Overpass Mono Nerd
 
 ## Usage
 
-The basic usage is similar to the native *ls* command, and for the options, look at:
+The basic usage is similar to the native *ls* command, and for the options, take a look at:
 
 `ls_extended help`
 
 Where ls_extended is the binary of this program which must be built.
+
+## Installation
+
+### With CCP4M
+
+The project uses CCP4M build system which is located [here](https://github.com/Electrux/ccp4m).
+The installation instructions for CCP4M are in its own repository.
+
+Once it is installed, just use `ccp4m project build` to build the code. The executable will be generated in the `bin/` directory of the project and you can then copy it to your PATH (`/usr/bin/`, `/usr/local/bin/` etc).
+
+
+### Without CCP4M
+
+To install without CCP4M, execute the following shell script in the project's root directory (This will not compile the tests though):
+
+`./build.sh`
+
+This will generate an executable in bin directory named `ls_extended`. Just copy it to your PATH.
