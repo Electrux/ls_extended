@@ -22,8 +22,6 @@ install:
 script:
   - ccp4m project build
   - cat ccp4m.yaml
-  - ls ./buildfiles
-  - ls ./testbin
   - ccp4m project test
   - bin/ls_extended
 after_script:
