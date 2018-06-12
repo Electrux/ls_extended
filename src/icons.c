@@ -131,6 +131,8 @@ static const char * get_file_icon_by_ext( const char * ext, const bool is_link )
 	else if( IS( ext, "jl" ) ) return "\ue624";
 	// Lua
 	else if( IS( ext, "lua" ) ) return "\ue620";
+	// Python
+	else if( IS( ext, "py" ) ) return "\uf81f";
 	// TODO: start from N
 
 	if( is_link ) return DEFAULT_LINK_FILE_ICON;
