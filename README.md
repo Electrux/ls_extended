@@ -9,6 +9,10 @@ To use this program, one **needs** to have the `Nerd Fonts` installed since it u
 I recommend the *Mononoki Nerd font* for the characters, and *Overpass Mono Nerd font* for the icons if possible
 (although most terminals don't permit use of separate fonts for Non-ASCII characters).
 
+## Example
+
+![ls_extended](/images/ls_extended.png)
+
 ## Usage
 
 The basic usage is similar to the native *ls* command, and for the options, take a look at:
