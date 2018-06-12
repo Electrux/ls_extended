@@ -92,13 +92,13 @@ builds:
       - src/(.*).c
     exclude:
       - src/main.c
-#  - name: strvec_all
-#    type: test
-#    inc_flags: ""
-#    lib_flags: ""
-#    pre_exec: ""
-#    main_src: tests/strvec_all.c
-#    other_src:
-#      - src/(.*).c
-#    exclude:
-#      - src/main.c
+  - name: strvec_all
+    type: test
+    inc_flags: ""
+    lib_flags: ""
+    pre_exec: ""
+    main_src: tests/strvec_all.c
+    other_src:
+      - src/(.*).c
+    exclude:
+      - src/main.c
