@@ -21,7 +21,6 @@ install:
   - printf 'travis\ntravis@travis.org' | ccp4m
 script:
   - ccp4m project build
-  - ls ./src
   - ccp4m project test
   - bin/ls_extended
 after_script:
