@@ -20,8 +20,7 @@ install:
 # - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get update && sudo apt-get install libyaml-cpp-dev libboost-all-dev ; fi
   - printf 'travis\ntravis@travis.org' | ccp4m
 script:
-  - ccp4m project build
-  - ccp4m project test
+  - ccp4m project build && ccp4m project test
   - bin/ls_extended
 after_script:
   - ccp4m project clean
