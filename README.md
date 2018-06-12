@@ -23,6 +23,10 @@ Where ls_extended is the binary of this program which must be built.
 
 ## Installation
 
+### Arch Linux
+
+This project is available on AUR under the name `ls_extended`.
+
 ### With CCP4M
 
 The project uses CCP4M build system which is located [here](https://github.com/Electrux/ccp4m).
