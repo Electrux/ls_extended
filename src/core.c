@@ -117,7 +117,7 @@ void _display( const int padding, const int option, const char * fmt, ... )
 			if( * fmt == 'f' ) {
 				double f = va_arg( args, double );
 				char f_str[ 10 ];
-				gcvt( f, sizeof( f_str ), f_str );
+				snprintf( f_str, sizeof( f_str ), "%f", f );
 				res_str[ res_ctr ] = '\0';
 				strcat( res_str, f_str );
 				res_ctr = strlen( res_str );
