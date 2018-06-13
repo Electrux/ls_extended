@@ -150,17 +150,21 @@ void _display( const int global_padding, const int option, const char * fmt, ...
 				++fmt;
 				++fmt;
 			}
-			++fmt;
 
 			if( padding ) {
+				// If there was no other format string after *, don't increment fmt;
+				if( res_ctr - pad_start != 0 ) ++fmt;
+
 				int pad_count = padding - res_ctr + pad_start;
 				for( int i = 0; i < pad_count; ++i ) {
 					res_str[ res_ctr++ ] = ' ';
 				}
 				padding = 0;
 				pad_start = -1;
+				continue;
 			}
 
+			++fmt;
 			continue;
 		}
 

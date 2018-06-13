@@ -24,5 +24,7 @@ int main()
 	display( "Testing padded 1\n" );
 	display( "%*s %*f", 14, "padded 14 2", 5, 3.4 );
 	display( "Testing padded 2\n" );
+	display( "Empty padding of 5: %*", 5 );
+	display( "There should be 5 spaces before this line\n" );
 	return 0;
 }
