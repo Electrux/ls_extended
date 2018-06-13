@@ -43,7 +43,7 @@ static void sort_list_dirs_first( struct str_vec * locs );
 // Length to accomodate the icons and tabs in non -l mode.
 // Should be = total length of icons, spaces, the ending /, and null terminator
 // + 14 ( for the terminal color codes )
-#define EXTRA_ITEM_LEN 20
+#define EXTRA_ITEM_LEN 21
 
 int ls( const struct winsize * ws, const char * loc, size_t flags )
 {
