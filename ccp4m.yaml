@@ -52,6 +52,16 @@ builds:
       - src/(.*).c
     exclude:
       - src/main.c
+  - name: colored_display_padding
+    type: test
+    inc_flags: ""
+    lib_flags: ""
+    pre_exec: ""
+    main_src: tests/colored_display_padding.c
+    other_src:
+      - src/(.*).c
+    exclude:
+      - src/main.c
   - name: strvec_insert
     type: test
     inc_flags: ""

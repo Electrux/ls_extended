@@ -50,13 +50,15 @@ void split_file( const char * file, char * name, char * ext )
 	ext[ 0 ] = '\0';
 }
 
-void _display( const int padding, const int option, const char * fmt, ... )
+void _display( const int global_padding, const int option, const char * fmt, ... )
 {
 	char * res_str = ( char * )malloc( sizeof( char ) * MAX_STR_MEM_ALLOC );
 	size_t res_ctr = 0;
 
 	va_list args;
 	va_start( args, fmt );
+
+	int padding = 0, pad_start = -1;
 
 	while( * fmt != '\0' ) {
 		if( * fmt == '{' && *( fmt + 1 ) != '\0' ) {
@@ -69,7 +71,7 @@ void _display( const int padding, const int option, const char * fmt, ... )
 
 			char tmp[ 10 ];
 			uint8_t tmp_ctr = 0;
-			while( * fmt != '\0' && * fmt != '}') {
+			while( * fmt != '\0' && * fmt != '}' ) {
 				tmp[ tmp_ctr++ ] = * fmt++;
 			}
 			if( * fmt == '\0' ) continue;
@@ -79,7 +81,7 @@ void _display( const int padding, const int option, const char * fmt, ... )
 			tmp[ tmp_ctr ] = '\0';
 			const char * tmp_res = get_color( tmp );
 			// invalid color
-			if( strcmp( tmp_res, "0") == 0 ) continue;
+			if( strcmp( tmp_res, "0" ) == 0 ) continue;
 
 			res_str[ res_ctr ] = '\0';
 			strcat( res_str, tmp_res );
@@ -94,6 +96,13 @@ void _display( const int padding, const int option, const char * fmt, ... )
 				res_str[ res_ctr++ ] = * fmt;
 				++fmt;
 				continue;
+			}
+
+			if( * fmt == '*' ) {
+				int i = va_arg( args, int );
+				padding = i;
+				pad_start = res_ctr;
+				++fmt;
 			}
 
 			if( * fmt == 'c' ) {
@@ -117,7 +126,7 @@ void _display( const int padding, const int option, const char * fmt, ... )
 			if( * fmt == 'f' ) {
 				double f = va_arg( args, double );
 				char f_str[ 10 ];
-				snprintf( f_str, sizeof( f_str ), "%f", f );
+				snprintf( f_str, sizeof( f_str ), "%.2f", f );
 				res_str[ res_ctr ] = '\0';
 				strcat( res_str, f_str );
 				res_ctr = strlen( res_str );
@@ -141,6 +150,20 @@ void _display( const int padding, const int option, const char * fmt, ... )
 				++fmt;
 				++fmt;
 			}
+
+			if( padding ) {
+				// If there was no other format string after *, don't increment fmt;
+				if( res_ctr - pad_start != 0 ) ++fmt;
+
+				int pad_count = padding - res_ctr + pad_start;
+				for( int i = 0; i < pad_count; ++i ) {
+					res_str[ res_ctr++ ] = ' ';
+				}
+				padding = 0;
+				pad_start = -1;
+				continue;
+			}
+
 			++fmt;
 			continue;
 		}
@@ -152,8 +175,8 @@ void _display( const int padding, const int option, const char * fmt, ... )
 
 	res_str[ res_ctr ] = '\0';
 
-	if( padding ) {
-		fprintf( stdout, "%-*s", padding, res_str );
+	if( global_padding ) {
+		fprintf( stdout, "%-*s", global_padding, res_str );
 		free( res_str );
 		return;
 	}
