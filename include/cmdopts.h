@@ -25,6 +25,7 @@ static const size_t OPT_I = 1 << 6;
 static const size_t OPT_L = 1 << 7;
 static const size_t OPT_T = 1 << 8;
 static const size_t OPT_S = 1 << 9;
+static const size_t OPT_1 = 1 << 10;
 
 size_t get_cmd_opts( const int argc, const char ** argv, char * location );
 
