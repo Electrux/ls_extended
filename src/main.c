@@ -22,12 +22,12 @@
 
 int main( int argc, char ** argv )
 {
-	if( argc > 1 && strcmp( argv[ 1 ], "help" ) == 0 ) {
+	if( argc > 1 && strcmp( argv[ 1 ], "--help" ) == 0 ) {
 		display_help( argv[ 0 ] );
 		return 0;
 	}
 
-	if( argc > 1 && strcmp( argv[ 1 ], "version" ) == 0 ) {
+	if( argc > 1 && strcmp( argv[ 1 ], "--version" ) == 0 ) {
 		display( "{p}Version{0}: {s}%zu{0}.{s}%zu{0}.{s}%zu{0}\n", VERSION_MAIN, VERSION_SUB, VERSION_PATCH );
 		return 0;
 	}
