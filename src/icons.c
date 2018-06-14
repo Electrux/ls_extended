@@ -55,6 +55,7 @@ const char * get_dir_icon( const char * dir, const bool is_link )
 	else if( BEGINS( dir, ".config" ) ) return "\ue5fc";
 	else if( BEGINS( dir, ".docker" ) ) return "\uf308";
 	else if( BEGINS( dir, ".go" ) ) return "\ue626";
+	else if( IS( dir, ".idea" ) ) return "\ue7b5";
 	else if( BEGINS( dir, ".mix" ) ) return "\ue62d";
 	else if( BEGINS( dir, ".npm, node_modules" ) ) return "\ue719";
 	else if( BEGINS( dir, ".vs, .vscode" ) ) return "\ue70c";
