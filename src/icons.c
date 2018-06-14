@@ -89,6 +89,7 @@ static const char * get_file_icon_by_ext( const char * ext, const bool is_link )
 
 	else if( IS( ext, "html" ) ) return "\ue60e";
 	else if( IS( ext, "md" ) ) return "\ue73e";
+	else if( IS( ext, "xml, ui" ) ) return "\ufabf";
 
 	// Git
 
