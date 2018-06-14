@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <inttypes.h>
 #include <stdarg.h>
 #include <string.h>
 #include <sys/ioctl.h>
@@ -143,7 +144,7 @@ void _display( const int global_padding, const int option, const char * fmt, ...
 			if( * fmt == 'l' && *( fmt + 1 ) != '\0' && *( fmt + 1 ) == 'l' && *( fmt + 2 ) != '\0' && *( fmt + 2 ) == 'u' ) {
 				uint64_t llu = va_arg( args, uint64_t );
 				char st_str[ 30 ];
-				snprintf( st_str, sizeof( st_str ), "%lu", llu );
+				snprintf( st_str, sizeof( st_str ), "%" PRIu64, llu );
 				res_str[ res_ctr ] = '\0';
 				strcat( res_str, st_str );
 				res_ctr = strlen( res_str );
