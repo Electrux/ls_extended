@@ -146,6 +146,7 @@ static const char * get_file_icon_by_ext( const char * ext, const bool is_link )
 static const char * get_file_icon_by_name( const char * name, const bool is_link )
 {
 	if( BEGINS( name, "LICENSE, license, copying, COPYING" ) ) return "\uf2c2";
+	else if( BEGINS( name, "Makefile" ) ) return "\ue779";
 	// TODO
 	if( is_link ) return DEFAULT_LINK_FILE_ICON;
 	return DEFAULT_FILE_ICON;
