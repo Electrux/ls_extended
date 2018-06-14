@@ -47,13 +47,9 @@ static void sort_list_dirs_first( struct str_vec * locs );
 
 int ls( const struct winsize * ws, const char * loc, size_t flags )
 {
-	char finaldir[ 1024 ];
-	if( strcmp( loc, "\0" ) == 0 ) strcpy( finaldir, "." );
-	else strcpy( finaldir, loc );
-
-	if( finaldir[ strlen( finaldir ) - 1 ] != '/' ) {
-		strcat( finaldir, "/" );
-	}
+	char final_loc[ 1024 ];
+	if( strcmp( loc, "\0" ) == 0 ) strcpy( final_loc, "." );
+	else strcpy( final_loc, loc );
 
 	// remove -l dependent flags if -l is not present
 	if( !( flags & OPT_L ) ) {
@@ -62,9 +58,25 @@ int ls( const struct winsize * ws, const char * loc, size_t flags )
 		flags &= ~OPT_I;
 	}
 
-	DIR * dir = opendir( finaldir );
+	struct stat tmp_st;
+	int tmp_st_res = stat( final_loc, & tmp_st );
+	if( tmp_st_res != 0 ) {
+		display( "{p}Something went wrong in fetching information of {r}%s{0}, {p}error{0}: {s}%d\n", final_loc, errno );
+		return errno;
+	}
+	if( !S_ISDIR( tmp_st.st_mode ) ) {
+		int res = display_loc_info( NULL, final_loc, flags, 0 );
+		if( !( flags & OPT_L ) ) display( "\n" );
+		return res;
+	}
+
+	if( final_loc[ strlen( final_loc ) - 1 ] != '/' ) {
+		strcat( final_loc, "/" );
+	}
+
+	DIR * dir = opendir( final_loc );
 	if( dir == NULL ) {
-		display_err( "{p}Unable to open directory{0}: {r}%s{0}\n", finaldir );
+		display_err( "{p}Unable to open directory{0}: {r}%s{0}\n", final_loc );
 		return LOC_NOT_OPENED;
 	}
 	struct str_vec * locs = generate_file_str_vec( dir, flags );
@@ -87,7 +99,7 @@ int ls( const struct winsize * ws, const char * loc, size_t flags )
 		// don't pad shift if the item is last on the line since pad won't be needed
 		// in that case anyway
 		int pad_shift = items_per_line_ctr == ( max_items_per_line - 1 ) ? 0 : max_len_in_files;
-		int temp_res = display_loc_info( finaldir, str_vec_get( locs, i ), flags, pad_shift );
+		int temp_res = display_loc_info( final_loc, str_vec_get( locs, i ), flags, pad_shift );
 		if( temp_res != 0 ) {
 			str_vec_delete( & locs );
 			return temp_res;
@@ -103,9 +115,7 @@ int ls( const struct winsize * ws, const char * loc, size_t flags )
 
 	str_vec_delete( & locs );
 
-	if( !( flags & OPT_F ) )
-		display( "\n" );
-
+	if( !( flags & OPT_L ) ) display( "\n" );
 	return SUCCESS;
 }
 
@@ -122,8 +132,13 @@ static int display_loc_info( const char * path, const char * loc, size_t flags, 
 	strcpy( stats.lnk_loc, "\0" );
 
 	char full_path[ 1024 ];
-	strcpy( full_path, path );
-	strcat( full_path, loc );
+	if( path != NULL ) {
+		strcpy( full_path, path );
+		strcat( full_path, loc );
+	}
+	else {
+		strcpy( full_path, loc );
+	}
 
 	int temp_res = get_stats( full_path, & stats );
 	if( temp_res != 0 ) {
