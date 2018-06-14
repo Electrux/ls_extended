@@ -78,7 +78,7 @@ int ls( const struct winsize * ws, const char * loc, size_t flags )
 	// The color codes are not displayed but do account for padding ( i guess ),
 	// and hence must be manually handled
 	int max_items_per_line = ( int ) ( ws->ws_col - 1 ) / ( max_len_in_files - 14 );
-	if( max_items_per_line < 1 ) max_items_per_line = 1;
+	if( ( flags & OPT_1 ) || max_items_per_line < 1 ) max_items_per_line = 1;
 
 	int items_per_line_ctr = 0;
 
