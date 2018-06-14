@@ -66,6 +66,7 @@ const char * get_dir_icon( const char * dir, const bool is_link )
 	else if( BEGINS( dir, "movie" ) ) return "\uf880";
 	else if( BEGINS( dir, "music, songs, audio" ) ) return "\uf832";
 	else if( BEGINS( dir, "photo, picture" ) ) return "\uf03e";
+	else if( IS( dir, "__pycache__" ) ) return "\uf81f";
 
 	if( is_link ) return DEFAULT_LINK_DIR_ICON;
 	return DEFAULT_DIR_ICON;
@@ -134,7 +135,7 @@ static const char * get_file_icon_by_ext( const char * ext, const bool is_link )
 	// TODO: start from N
 
 	// Python
-	else if( IS( ext, "py" ) ) return "\uf81f";
+	else if( IS( ext, "py, pyc, pyd, pyx" ) ) return "\uf81f";
 
 	if( is_link ) return DEFAULT_LINK_FILE_ICON;
 	return DEFAULT_FILE_ICON;
