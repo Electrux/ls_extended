@@ -55,6 +55,7 @@ const char * get_dir_icon( const char * dir, const bool is_link )
 	else if( BEGINS( dir, ".config" ) ) return "\ue5fc";
 	else if( BEGINS( dir, ".docker" ) ) return "\uf308";
 	else if( BEGINS( dir, ".go" ) ) return "\ue626";
+	else if( IS( dir, ".idea" ) ) return "\ue7b5";
 	else if( BEGINS( dir, ".mix" ) ) return "\ue62d";
 	else if( BEGINS( dir, ".npm, node_modules" ) ) return "\ue719";
 	else if( BEGINS( dir, ".vs, .vscode" ) ) return "\ue70c";
@@ -66,6 +67,7 @@ const char * get_dir_icon( const char * dir, const bool is_link )
 	else if( BEGINS( dir, "movie" ) ) return "\uf880";
 	else if( BEGINS( dir, "music, songs, audio" ) ) return "\uf832";
 	else if( BEGINS( dir, "photo, picture" ) ) return "\uf03e";
+	else if( IS( dir, "__pycache__" ) ) return "\uf81f";
 
 	if( is_link ) return DEFAULT_LINK_DIR_ICON;
 	return DEFAULT_DIR_ICON;
@@ -82,12 +84,13 @@ static const char * get_file_icon_by_ext( const char * ext, const bool is_link )
 
 	else if( IS( ext, "json" ) ) return "\ufb25";
 	else if( IS( ext, "lock" ) ) return "\uf023";
-	else if( IS( ext, "ini, yaml, yml, env" ) ) return "\ue615";
+	else if( IS( ext, "ini, yaml, yml, env, toml" ) ) return "\ue615";
 
 	// Data handling / manipulation
 
 	else if( IS( ext, "html" ) ) return "\ue60e";
 	else if( IS( ext, "md" ) ) return "\ue73e";
+	else if( IS( ext, "xml, ui" ) ) return "\ufabf";
 
 	// Git
 
@@ -134,7 +137,7 @@ static const char * get_file_icon_by_ext( const char * ext, const bool is_link )
 	// TODO: start from N
 
 	// Python
-	else if( IS( ext, "py" ) ) return "\uf81f";
+	else if( IS( ext, "py, pyc, pyd, pyx" ) ) return "\uf81f";
 
 	if( is_link ) return DEFAULT_LINK_FILE_ICON;
 	return DEFAULT_FILE_ICON;
@@ -142,7 +145,8 @@ static const char * get_file_icon_by_ext( const char * ext, const bool is_link )
 
 static const char * get_file_icon_by_name( const char * name, const bool is_link )
 {
-	if( BEGINS( name, "LICENSE, license" ) ) return "\uf2c2";
+	if( BEGINS( name, "LICENSE, license, copying, COPYING" ) ) return "\uf2c2";
+	else if( BEGINS( name, "Makefile" ) ) return "\ue779";
 	// TODO
 	if( is_link ) return DEFAULT_LINK_FILE_ICON;
 	return DEFAULT_FILE_ICON;

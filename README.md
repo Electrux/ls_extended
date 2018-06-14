@@ -17,7 +17,7 @@ I recommend the *Mononoki Nerd font* for the characters, and *Overpass Mono Nerd
 
 The basic usage is similar to the native *ls* command, and for the options, take a look at:
 
-`ls_extended help`
+`ls_extended --help`
 
 Where ls_extended is the binary of this program which must be built.
 

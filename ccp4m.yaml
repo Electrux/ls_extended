@@ -1,5 +1,5 @@
 name: ls_extended
-version: 1.0
+version: 1.0.4
 lang: c
 std: 11
 compile_flags: -O2

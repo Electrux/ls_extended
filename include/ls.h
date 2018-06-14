@@ -11,10 +11,6 @@
 #ifndef LS_H
 #define LS_H
 
-#if defined __linux__ && defined __GNUC__ && !defined __clang__
-#define _DEFAULT_SOURCE
-#endif
-
 #include <stdlib.h>
 #include <stdbool.h>
 #include <sys/ioctl.h>
