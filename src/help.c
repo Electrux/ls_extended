@@ -38,5 +38,5 @@ void display_help( const char * prog_name )
 	display( "\t{0}-{s}%*c{0} - {t}Shows all files{0}/{t}directories in a list form with various information about them{0}\n", OPT_SPACES, 'l' );
 
 	display( "\t{0}-{s}%*c{0} - {t}Sorts the output by directories first{0}\n", OPT_SPACES, 's' );
-	display( "\t{0}-{s}%*c{0} - {t}{0}({e}The numeric digit ``one''{0}.) {t}Force output to be one entry per line{0}\n", OPT_SPACES, '1' );
+	display( "\t{0}-{s}%*c{0} - {t}{0}({e}The numeric digit 'one'{0}) {t}Force output to be one entry per line{0}\n", OPT_SPACES, '1' );
 }
