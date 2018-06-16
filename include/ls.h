@@ -27,6 +27,6 @@ struct stat_info
 	struct stat lnk_st;
 };
 
-int ls( const struct winsize * ws, const char * loc, const size_t flags );
+int ls( const struct winsize * ws, const char * loc, const size_t flags, int loc_count );
 
 #endif // LS_H

@@ -16,7 +16,7 @@
 
 static const uint8_t VERSION_MAIN = 1;
 static const uint8_t VERSION_SUB = 0;
-static const uint8_t VERSION_PATCH = 5;
+static const uint8_t VERSION_PATCH = 6;
 
 enum ERRORS {
 	SUCCESS,

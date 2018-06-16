@@ -16,6 +16,7 @@
 #include <sys/ioctl.h>
 
 #include "../include/core.h"
+#include "../include/strvec.h"
 #include "../include/cmdopts.h"
 #include "../include/help.h"
 #include "../include/ls.h"
@@ -32,11 +33,19 @@ int main( int argc, char ** argv )
 		return 0;
 	}
 
-	char location[ 1024 ];
-	size_t flags = get_cmd_opts( argc, ( const char ** )argv, location );
+	struct str_vec * locs = str_vec_create();
+	size_t flags = get_cmd_opts( argc, ( const char ** )argv, locs );
 
 	struct winsize ws;
 	ioctl( STDOUT_FILENO, TIOCGWINSZ, & ws );
 
-	return ls( & ws, location, flags );
+	size_t loc_count = str_vec_get_count( locs );
+	int res = 0;
+	for( size_t i = 0; i < loc_count; ++i ) {
+		res = ls( & ws, str_vec_get( locs, i ), flags, loc_count );
+		if( res != 0 ) break;
+	}
+
+	str_vec_delete( & locs );
+	return res;
 }

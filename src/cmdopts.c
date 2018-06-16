@@ -11,9 +11,11 @@
 #include <stdint.h>
 #include <string.h>
 
+#include "../include/strvec.h"
+
 #include "../include/cmdopts.h"
 
-size_t get_cmd_opts( const int argc, const char ** argv, char * location )
+size_t get_cmd_opts( const int argc, const char ** argv, struct str_vec * locs )
 {
 	size_t flags = 0;
 	uint8_t found_loc = 0;
@@ -21,8 +23,7 @@ size_t get_cmd_opts( const int argc, const char ** argv, char * location )
 	for( int i = 1; i < argc; ++i ) {
 		// fetch the location to be ls'ed in
 		if( argv[ i ][ 0 ] != '-' ) {
-			strcpy( location, argv[ i ] );
-			found_loc = 1;
+			str_vec_add( locs, argv[ i ] );
 			continue;
 		}
 
@@ -42,6 +43,6 @@ size_t get_cmd_opts( const int argc, const char ** argv, char * location )
 		}
 	}
 
-	if( !found_loc ) strcpy( location, "\0" );
+	if( str_vec_get_count( locs ) == 0 ) str_vec_add( locs, "\0" );
 	return flags;
 }

@@ -14,6 +14,8 @@
 #include <stdlib.h>
 #include <sys/ioctl.h>
 
+#include "strvec.h"
+
 // Option bit masks
 static const size_t OPT_A = 1 << 0;
 static const size_t OPT_CAPS_A = 1 << 1;
@@ -27,6 +29,6 @@ static const size_t OPT_T = 1 << 8;
 static const size_t OPT_S = 1 << 9;
 static const size_t OPT_1 = 1 << 10;
 
-size_t get_cmd_opts( const int argc, const char ** argv, char * location );
+size_t get_cmd_opts( const int argc, const char ** argv, struct str_vec * locs );
 
 #endif // CMDOPTS_H

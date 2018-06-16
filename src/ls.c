@@ -45,7 +45,7 @@ static void sort_list_dirs_first( struct str_vec * locs );
 // + 14 ( for the terminal color codes )
 #define EXTRA_ITEM_LEN 21
 
-int ls( const struct winsize * ws, const char * loc, size_t flags )
+int ls( const struct winsize * ws, const char * loc, size_t flags, int loc_count )
 {
 	char final_loc[ 1024 ];
 	if( strcmp( loc, "\0" ) == 0 ) strcpy( final_loc, "." );
@@ -93,6 +93,10 @@ int ls( const struct winsize * ws, const char * loc, size_t flags )
 	if( ( flags & OPT_1 ) || max_items_per_line < 1 ) max_items_per_line = 1;
 
 	int items_per_line_ctr = 0;
+
+	if( loc_count > 1 ) {
+		display( "{bw}%s{0}:\n", final_loc );
+	}
 
 	for( int i = 0; i < ( int )str_vec_get_count( locs ); ++i ) {
 		if( !( flags & OPT_L ) && items_per_line_ctr == 0 ) display( " " );
