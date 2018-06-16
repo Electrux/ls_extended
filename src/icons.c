@@ -57,7 +57,7 @@ const char * get_dir_icon( const char * dir, const bool is_link )
 	else if( BEGINS( dir, ".go" ) ) return "\ue626";
 	else if( IS( dir, ".idea" ) ) return "\ue7b5";
 	else if( BEGINS( dir, ".mix" ) ) return "\ue62d";
-	else if( BEGINS( dir, ".npm, node_modules" ) ) return "\ue719";
+	else if( BEGINS( dir, ".npm, node_modules" ) ) return "\ue5fa";
 	else if( BEGINS( dir, ".vs, .vscode" ) ) return "\ue70c";
 	else if( BEGINS( dir, ".weechat" ) ) return "\ufbee";
 	else if( BEGINS( dir, "application" ) ) return "\ufb13";
@@ -102,6 +102,9 @@ static const char * get_file_icon_by_ext( const char * ext, const bool is_link )
 	else if( BEGINS( ext, "zsh, bash" ) ) return "\ue615";
 	else if( BEGINS( ext, "vim" ) ) return "\ue7c5";
 
+	// Databases
+	else if( IS( ext, "sql, sqlite" ) ) return "\ue706";
+
 	// Languages
 
 	// C, C++
@@ -134,10 +137,22 @@ static const char * get_file_icon_by_ext( const char * ext, const bool is_link )
 	else if( IS( ext, "jl" ) ) return "\ue624";
 	// Lua
 	else if( IS( ext, "lua" ) ) return "\ue620";
-	// TODO: start from N
-
+	// Perl
+	else if( IS( ext, "pl, pm, t, pod" ) ) return "\ue769";
+	// Prolog
+	else if( IS( ext, "pro, P" ) ) return "\ue7a1";
 	// Python
 	else if( IS( ext, "py, pyc, pyd, pyx" ) ) return "\uf81f";
+	// Ruby
+	else if( IS( ext, "rb" ) ) return "\ue739";
+	// Rust
+	else if( IS( ext, "rs, rlib" ) ) return "\ue7a8";
+	// Scala
+	else if( IS( ext, "scala, sc" ) ) return "\ue737";
+	// Switft
+	else if( IS( ext, "swift" ) ) return "\ue755";
+	// Typescript
+	else if( IS( ext, "ts, tsx" ) ) return "\ufbe4";
 
 	if( is_link ) return DEFAULT_LINK_FILE_ICON;
 	return DEFAULT_FILE_ICON;
