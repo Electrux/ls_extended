@@ -204,6 +204,8 @@ uint8_t extra_space_count( const char * str, const int used_bytes )
 	// Hex representations
     // Convert val(hex) to wchar_t for use in mk_wcswidth function
     // from wc_width.c function
+    // Courtesy of Markus
+    // http://www.cl.cam.ac.uk/~mgk25/ucs/wcwidth.c 
     wchar_t wc = strtol(str, NULL, 16);
     
     if (mk_wcswidth(&wc, sizeof(wc)) != 1) {
