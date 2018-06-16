@@ -20,6 +20,8 @@
 
 #include "../include/core.h"
 
+#include "../include/wcwidth.c"
+
 #define MAX_STR_MEM_ALLOC 2048
 
 void split_file( const char * file, char * name, char * ext )
@@ -191,7 +193,7 @@ void _display( const int global_padding, const int option, const char * fmt, ...
 
 uint8_t extra_space_count( const char * str, const int used_bytes )
 {
-	// 1 shift for chinese characters instead of 2 because they
+	// 1 shift for multiple width characters instead of 2 because they
 	// already take space of 2 english characters and are of 3 bytes each
 	long long val = 0;
 	for( int i = 0; i < used_bytes; ++i ) {
@@ -200,15 +202,13 @@ uint8_t extra_space_count( const char * str, const int used_bytes )
 	}
 
 	// Hex representations
-	if( val >= 0xE4B880 && val <= 0xE9BFBF ) return 1;
-	else if( val >= 0xE39080   && val <= 0xE4B6BF   ) return 1;
-	else if( val >= 0xEFA480   && val <= 0xEFABBF   ) return 1;
-	else if( val >= 0xF0A08080 && val <= 0xF0AA9B9F ) return 1;
-	else if( val >= 0xF0AA9C80 && val <= 0xF0AB9CBF ) return 1;
-	else if( val >= 0xF0AB9D80 && val <= 0xF0ABA09F ) return 1;
-	else if( val >= 0xF0ABA0A0 && val <= 0xF0ACBAAF ) return 1;
-	else if( val >= 0xF0AFA080 && val <= 0xF0AFA89F ) return 1;
-
+    // Convert val(hex) to wchar_t for use in mk_wcswidth function
+    // from wc_width.c function
+    wchar_t wc = strtol(str, NULL, 16);
+    
+    if (mk_wcswidth(&wc, sizeof(wc)) != 1) {
+        return 1;
+    }
 	return 2;
 }
 
