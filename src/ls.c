@@ -151,7 +151,7 @@ static int display_loc_info( const char * path, const char * loc, size_t flags, 
 	else strcpy( icon, get_file_icon( loc, S_ISLNK( stats.st.st_mode ) ) );
 
 	// add spaces for utf strings
-	int utf_spaces = strlen( loc ) - utf8_strlen( loc );
+	int utf_spaces = get_extra_spaces( loc );
 
 	if( !( flags & OPT_L ) ) {
 		if( S_ISDIR( stats.st.st_mode ) ) {

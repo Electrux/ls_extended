@@ -16,7 +16,7 @@
 
 static const uint8_t VERSION_MAIN = 1;
 static const uint8_t VERSION_SUB = 0;
-static const uint8_t VERSION_PATCH = 4;
+static const uint8_t VERSION_PATCH = 5;
 
 enum ERRORS {
 	SUCCESS,
@@ -43,6 +43,9 @@ void _display( const int padding, const int option, const char * fmt, ... );
 #define display_err( ... ) _display( 0, 1, __VA_ARGS__ )
 #define display_test( ... ) _display( 0, 2, __VA_ARGS__ )
 #define display_padded( padding, ... ) _display( padding, 0, __VA_ARGS__ )
+
+uint8_t extra_space_count( const char * str, const int used_bytes );
+uint64_t get_extra_spaces( const char * str );
 
 size_t utf8_strlen( const char * _s );
 

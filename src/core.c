@@ -189,6 +189,48 @@ void _display( const int global_padding, const int option, const char * fmt, ...
 	free( res_str );
 }
 
+uint8_t extra_space_count( const char * str, const int used_bytes )
+{
+	// 1 shift for chinese characters instead of 2 because they
+	// already take space of 2 english characters and are of 3 bytes each
+	long long val = 0;
+	for( int i = 0; i < used_bytes; ++i ) {
+		val <<= 8;
+		val |= (int)( unsigned char )str[ i ];
+	}
+
+	// Hex representations
+	if( val >= 0xE4B880 && val <= 0xE9BFBF ) return 1;
+	else if( val >= 0xE39080   && val <= 0xE4B6BF   ) return 1;
+	else if( val >= 0xEFA480   && val <= 0xEFABBF   ) return 1;
+	else if( val >= 0xF0A08080 && val <= 0xF0AA9B9F ) return 1;
+	else if( val >= 0xF0AA9C80 && val <= 0xF0AB9CBF ) return 1;
+	else if( val >= 0xF0AB9D80 && val <= 0xF0ABA09F ) return 1;
+	else if( val >= 0xF0ABA0A0 && val <= 0xF0ACBAAF ) return 1;
+	else if( val >= 0xF0AFA080 && val <= 0xF0AFA89F ) return 1;
+
+	return 2;
+}
+
+uint64_t get_extra_spaces( const char * str )
+{
+	int extra_spaces = 0;
+	int move_ahead;
+
+	while( * str ) {
+		uint8_t c = ( unsigned char )( * str );
+		if( c >= 0 && c <= 127 ) move_ahead = 1;
+		else if( ( c & 0xE0 ) == 0xC0 ) move_ahead = 2;
+		else if( ( c & 0xF0 ) == 0xE0 ) move_ahead = 3;
+		else if( ( c & 0xF8 ) == 0xF0 ) move_ahead = 4;
+
+		if( move_ahead > 1 ) extra_spaces += extra_space_count( str, move_ahead );
+
+		while( move_ahead-- ) str++;
+	}
+	return extra_spaces;
+}
+
 // The code below is courtesy of:
 //   http://www.daemonology.net/blog/2008-06-05-faster-utf8-strlen.html
 //
