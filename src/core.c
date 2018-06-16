@@ -199,7 +199,7 @@ uint8_t extra_space_count( const char * str, const int used_bytes )
 		val |= (int)( unsigned char )str[ i ];
 	}
 
-	// Hex representations
+	// Hex representations of CJK characters
 	if( val >= 0xE4B880 && val <= 0xE9BFBF ) return 1;
 	else if( val >= 0xE39080   && val <= 0xE4B6BF   ) return 1;
 	else if( val >= 0xEFA480   && val <= 0xEFABBF   ) return 1;
@@ -208,6 +208,11 @@ uint8_t extra_space_count( const char * str, const int used_bytes )
 	else if( val >= 0xF0AB9D80 && val <= 0xF0ABA09F ) return 1;
 	else if( val >= 0xF0ABA0A0 && val <= 0xF0ACBAAF ) return 1;
 	else if( val >= 0xF0AFA080 && val <= 0xF0AFA89F ) return 1;
+
+	// Japanese Hiragana
+	else if( val >= 0xE38180   && val <= 0xE3829F   ) return 1;
+	// Japanese Katakana
+	else if( val >= 0xE382A0   && val <= 0xE383BF   ) return 1;
 
 	return 2;
 }
