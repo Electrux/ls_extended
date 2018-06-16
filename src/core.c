@@ -199,6 +199,12 @@ uint8_t extra_space_count( const char * str, const int used_bytes )
 		val |= (int)( unsigned char )str[ i ];
 	}
 
+	// Half and / or full width characters
+	if( val >= 0xEFBC80 && val <= 0xEFBFAF ) {
+		if( ( val >= 0xEFBDA5 && val <= 0xEFBE9F ) || ( val >= 0xEFBEA0 && val <= 0xEFBF9C ) ) return 2;
+		return 1;
+	}
+
 	// Hex representations of CJK characters
 	if( val >= 0xE4B880 && val <= 0xE9BFBF ) return 1;
 	else if( val >= 0xE39080   && val <= 0xE4B6BF   ) return 1;
