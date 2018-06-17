@@ -199,28 +199,40 @@ uint8_t extra_space_count( const char * str, const int used_bytes )
 		val |= (int)( unsigned char )str[ i ];
 	}
 
-	// Half and / or full width characters
-	// FF00 - FFEF
-	if( val >= 0xEFBC80 && val <= 0xEFBFAF ) {
-		// Halfwidth FF65 - FF9F || FFA0 - FFDC
-		if( ( val >= 0xEFBDA5 && val <= 0xEFBE9F ) || ( val >= 0xEFBEA0 && val <= 0xEFBF9C ) ) return 2;
-		// Full width
-		return 1;
-	}
-
+	// Latin-1 Supplement are treated to be full width for some reason even
+	// though they use half width only:
+	// 00A0 - 00FF
+	if( val >= 0xC2A0 && val <= 0xC3BF ) return 1;
+	// Same for Greek and Coptic set:
+	// 0370 - 03FF
+	else if( val >= 0xCDB0 && val <= 0xCFBF ) return 1;
+	// 3099 - 309C are exceptions to the full width characters in Hiragana
+	// These seem like they don't take any space for themselves and use the cells
+	// of the previous characters
+	else if( val >= 0xE38299 && val <= 0xE3829C ) return 3;
 	// CJK Radicals Supplement, Kangxi Radicals, Ideographic Description Characters, CJK Symbols and Punctuation, Hiragana, Katakana,
 	// Bopomofo, Hangul Compatibility Jamo, Kanbun, Bopomofo Extended, Katakana Phonetic Extensions, Enclosed CJK Letters and Months,
 	// CJK Compatibility, CJK Unified Ideogprahs Extension A, Yijing Hexagram Symbols, CJK Unified Ideographs, Yi Syllables, Yi Radicals:
 	// 2E80 - A4CF
-	if( val >= 0xE2BA80 && val <= 0xEA938F ) return 1;
+	else if( val >= 0xE2BA80 && val <= 0xEA938F ) return 1;
 	// Hangul: AC00 - D7AF
 	else if( val >= 0xEAB080 && val <= 0xED9EAF ) return 1;
-	// High Surrogates, High Private Use Surrogates, Low Surrogates, Private Use Area, CJK Compatibility Ideographs,
-	// Alphabetic Presentation Forms:
+	// High Surrogates, High Private Use Surrogates, Low Surrogates, Private Use Area,
+	// CJK Compatibility Ideographs, Alphabetic Presentation Forms:
 	// D800 - FDFF
 	else if( val >= 0xEDA080 && val <= 0xEFB7BF ) return 1;
-	// CJK Compatibility, Small form variants: FE30 - FE6F
+	// CJK Compatibility, Small form variants:
+	// FE30 - FE6F
 	else if( val >= 0xEFB8B0 && val <= 0xEFB9AF ) return 1;
+
+	// Half and / or full width characters:
+	// FF00 - FFEF
+	if( val >= 0xEFBC80 && val <= 0xEFBFAF ) {
+		// Halfwidth: FF65 - FF9F and FFA0 - FFDC
+		if( ( val >= 0xEFBDA5 && val <= 0xEFBE9F ) || ( val >= 0xEFBEA0 && val <= 0xEFBF9C ) ) return 2;
+		// Full width
+		return 1;
+	}
 
 	return 2;
 }
@@ -236,11 +248,11 @@ uint64_t get_extra_spaces( const char * str )
 		else if( ( c & 0xE0 ) == 0xC0 ) move_ahead = 2;
 		else if( ( c & 0xF0 ) == 0xE0 ) move_ahead = 3;
 		else if( ( c & 0xF8 ) == 0xF0 ) move_ahead = 4;
-
 		if( move_ahead > 1 ) extra_spaces += extra_space_count( str, move_ahead );
 
 		while( move_ahead-- ) str++;
 	}
+
 	return extra_spaces;
 }
 
