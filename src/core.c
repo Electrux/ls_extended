@@ -200,25 +200,27 @@ uint8_t extra_space_count( const char * str, const int used_bytes )
 	}
 
 	// Half and / or full width characters
+	// FF00 - FFEF
 	if( val >= 0xEFBC80 && val <= 0xEFBFAF ) {
+		// Halfwidth FF65 - FF9F || FFA0 - FFDC
 		if( ( val >= 0xEFBDA5 && val <= 0xEFBE9F ) || ( val >= 0xEFBEA0 && val <= 0xEFBF9C ) ) return 2;
+		// Full width
 		return 1;
 	}
 
-	// Hex representations of CJK characters
-	if( val >= 0xE4B880 && val <= 0xE9BFBF ) return 1;
-	else if( val >= 0xE39080   && val <= 0xE4B6BF   ) return 1;
-	else if( val >= 0xEFA480   && val <= 0xEFABBF   ) return 1;
-	else if( val >= 0xF0A08080 && val <= 0xF0AA9B9F ) return 1;
-	else if( val >= 0xF0AA9C80 && val <= 0xF0AB9CBF ) return 1;
-	else if( val >= 0xF0AB9D80 && val <= 0xF0ABA09F ) return 1;
-	else if( val >= 0xF0ABA0A0 && val <= 0xF0ACBAAF ) return 1;
-	else if( val >= 0xF0AFA080 && val <= 0xF0AFA89F ) return 1;
-
-	// Japanese Hiragana
-	else if( val >= 0xE38180   && val <= 0xE3829F   ) return 1;
-	// Japanese Katakana
-	else if( val >= 0xE382A0   && val <= 0xE383BF   ) return 1;
+	// CJK Radicals Supplement, Kangxi Radicals, Ideographic Description Characters, CJK Symbols and Punctuation, Hiragana, Katakana,
+	// Bopomofo, Hangul Compatibility Jamo, Kanbun, Bopomofo Extended, Katakana Phonetic Extensions, Enclosed CJK Letters and Months,
+	// CJK Compatibility, CJK Unified Ideogprahs Extension A, Yijing Hexagram Symbols, CJK Unified Ideographs, Yi Syllables, Yi Radicals:
+	// 2E80 - A4CF
+	if( val >= 0xE2BA80 && val <= 0xEA938F ) return 1;
+	// Hangul: AC00 - D7AF
+	else if( val >= 0xEAB080 && val <= 0xED9EAF ) return 1;
+	// High Surrogates, High Private Use Surrogates, Low Surrogates, Private Use Area, CJK Compatibility Ideographs,
+	// Alphabetic Presentation Forms:
+	// D800 - FDFF
+	else if( val >= 0xEDA080 && val <= 0xEFB7BF ) return 1;
+	// CJK Compatibility, Small form variants: FE30 - FE6F
+	else if( val >= 0xEFB8B0 && val <= 0xEFB9AF ) return 1;
 
 	return 2;
 }

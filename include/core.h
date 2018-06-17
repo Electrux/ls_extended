@@ -16,9 +16,10 @@
 
 static const uint8_t VERSION_MAIN = 1;
 static const uint8_t VERSION_SUB = 0;
-static const uint8_t VERSION_PATCH = 6;
+static const uint8_t VERSION_PATCH = 7;
 
-enum ERRORS {
+enum ERRORS
+{
 	SUCCESS,
 	LOC_NOT_OPENED,
 	STR_VEC_INIT_FAIL,
