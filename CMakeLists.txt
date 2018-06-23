@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.0)
 
+set(CMAKE_BUILD_TYPE "RelWithDebInfo"
+	CACHE STRING "CMake Build Type")
+
 project(ls_extended
 	VERSION 1.0.0
 	LANGUAGES C)
