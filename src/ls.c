@@ -311,16 +311,12 @@ static struct str_vec * generate_file_str_vec( DIR * dir, const size_t flags )
 	}
 	while( ( di = readdir( dir ) ) != NULL ) {
 		if( flags & OPT_D || flags & OPT_F ) {
-			if( di->d_type == DT_DIR && !( flags & OPT_D ) )
-				continue;
-			if( di->d_type != DT_DIR && !( flags & OPT_F ) )
-				continue;
+			if( di->d_type == DT_DIR && !( flags & OPT_D ) ) continue;
+			if( di->d_type != DT_DIR && !( flags & OPT_F ) ) continue;
 		}
 		if( strncmp( di->d_name, ".", 1 ) == 0 || strncmp( di->d_name, "..", 2 ) == 0 ) {
-			if( ( strcmp( di->d_name, "." ) == 0 || strcmp( di->d_name, ".." ) == 0 ) && !( flags & OPT_A ) )
-				continue;
-			else if( !( flags & OPT_A ) && !( flags & OPT_CAPS_A ) )
-				continue;
+			if( ( strcmp( di->d_name, "." ) == 0 || strcmp( di->d_name, ".." ) == 0 ) && !( flags & OPT_A ) ) continue;
+			else if( !( flags & OPT_A ) && !( flags & OPT_CAPS_A ) ) continue;
 		}
 
 		if( ( flags & OPT_S ) && di->d_type == DT_DIR ) str_vec_add( dir_locs, di->d_name );
