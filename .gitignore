@@ -16,6 +16,7 @@ bin/
 lib/
 build/
 buildfiles/
+CMakeFiles/
 
 # Build file on BSD #
 #####################
