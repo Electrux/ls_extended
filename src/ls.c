@@ -47,7 +47,13 @@ static void sort_list_dirs_first( struct str_vec * locs );
 
 int ls( const struct winsize * ws, const char * loc, size_t flags, int loc_count )
 {
-	char final_loc[ 1024 ];
+	const size_t loc_size = 1024;
+	char final_loc[ loc_size ];
+
+	if((strlen(loc) + 1) > loc_size) {
+		return EXIT_FAILURE;
+	}
+
 	if( strcmp( loc, "\0" ) == 0 ) strcpy( final_loc, "." );
 	else strcpy( final_loc, loc );
 
