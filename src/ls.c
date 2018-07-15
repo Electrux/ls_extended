@@ -41,9 +41,9 @@ static int get_max_file_len( struct str_vec * locs );
 static void sort_list_dirs_first( struct str_vec * locs );
 
 // Length to accomodate the icons and tabs in non -l mode.
-// Should be = total length of icons, spaces, the ending /, and null terminator
+// Should be = total length of icons ( 1 ), spaces ( 1 ), the ending / ( 1 ), and null terminator ( 1 )
 // + 14 ( for the terminal color codes )
-#define EXTRA_ITEM_LEN 21
+#define EXTRA_ITEM_LEN 18
 
 int ls( const struct winsize * ws, const char * loc, size_t flags, int loc_count )
 {
@@ -165,17 +165,17 @@ static int display_loc_info( const char * path, const char * loc, size_t flags, 
 
 	if( !( flags & OPT_L ) ) {
 		if( S_ISDIR( stats.st.st_mode ) ) {
-			display_padded( max_file_len + utf_spaces, "{b}%s  %s/{0}", icon, loc );
+			display_padded( max_file_len + utf_spaces, "{b}%s %s/{0}", icon, loc );
 			return SUCCESS;
 		}
 
 		if( S_ISLNK( stats.st.st_mode ) ) {
-			if( stats.lnk_is_dead ) display_padded( max_file_len + utf_spaces, "{r}%s  %s{0}", icon, loc );
-			else display_padded( max_file_len + utf_spaces, "{y}%s  %s{0}", icon, loc );
+			if( stats.lnk_is_dead ) display_padded( max_file_len + utf_spaces, "{r}%s %s{0}", icon, loc );
+			else display_padded( max_file_len + utf_spaces, "{y}%s %s{0}", icon, loc );
 			return SUCCESS;
 		}
 
-		display_padded( max_file_len + utf_spaces, "{g}%s  %s{0}", icon, loc );
+		display_padded( max_file_len + utf_spaces, "{g}%s %s{0}", icon, loc );
 		return SUCCESS;
 	}
 
