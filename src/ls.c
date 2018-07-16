@@ -232,9 +232,9 @@ static int display_loc_info( const char * path, const char * loc, size_t flags, 
 	display( "\t{w}%s", mtime );
 
 	// file/folder name
-	if( S_ISDIR( stats.st.st_mode ) ) display( "\t{b}%s  %s", icon, loc );
-	else if( S_ISLNK( stats.st.st_mode ) ) display( "\t{y}%s  %s{0}" , icon, loc );
-	else display( "\t{g}%s  %s", icon, loc );
+	if( S_ISDIR( stats.st.st_mode ) ) display( "\t{b}%s %s", icon, loc );
+	else if( S_ISLNK( stats.st.st_mode ) ) display( "\t{y}%s %s{0}" , icon, loc );
+	else display( "\t{g}%s %s", icon, loc );
 
 	// link info for links
 	if( S_ISLNK( stats.st.st_mode ) ) {
