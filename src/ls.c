@@ -92,10 +92,10 @@ int ls( const struct winsize * ws, const char * loc, size_t flags, int loc_count
 
 	int max_len_in_files = get_max_file_len( locs ) + EXTRA_ITEM_LEN;
 	// -1 for the first space on each line when not in -l mode
-	// -14 to compensate for the terminal color codes
+	// -12 to compensate for the terminal color codes
 	// The color codes are not displayed but do account for padding ( i guess ),
 	// and hence must be manually handled
-	int max_items_per_line = ( int ) ( ws->ws_col - 1 ) / ( max_len_in_files - 14 );
+	int max_items_per_line = ( int ) ( ws->ws_col - 1 ) / ( max_len_in_files - 12 );
 	if( ( flags & OPT_1 ) || max_items_per_line < 1 ) max_items_per_line = 1;
 
 	int items_per_line_ctr = 0;
