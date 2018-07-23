@@ -45,6 +45,10 @@ static void sort_list_dirs_first( struct str_vec * locs );
 // + 14 ( for the terminal color codes )
 #define EXTRA_ITEM_LEN 18
 
+//The max amount of symlink jumps the program will take.
+//It is in danger of a stack overflow if it follows too many.
+#define MAX_LINK_JUMP_COUNT 32
+
 int ls( const struct winsize * ws, const char * loc, size_t flags, int loc_count )
 {
 	const size_t loc_size = 1024;
@@ -265,6 +269,10 @@ static int get_stats( const char * path, struct stat_info * stats )
 
 	if( S_ISLNK( tmp_st.st_mode ) ) {
 		stats->lnk_jumps += 1;
+
+        if(stats->lnk_jumps >= MAX_LINK_JUMP_COUNT) {
+            return SUCCESS;
+        }
 
 		char buf[ 2048 ];
 		ssize_t len;
