@@ -34,6 +34,10 @@ static bool find_in( const char * of, const char * values, bool is_exact_match )
 #define IS( of, values ) find_in( of, values, true )
 #define BEGINS( of, values ) find_in( of, values, false )
 
+#define LOSSLESS_AUDIO "8svx, iff, aiff, aif, aifc, au, snd, bwf, wav, wave, cdda, raw, pcm, sam, ra, ram, flac, la, pac, ape, ofr, ofs, off, rka, shn, tak, tta, wv, brstm, dts, dtshd, dtsma, ast, aw, psf, alac, m4a"
+#define LOSSY_AUDIO "amr, 3ga, mp1, mp2, mp3, spx, gsm, wma, aac, mpc, vqf, ots, swa, vox, voc, dwd, smp, ogg, oga, opus"
+#define PLAYLIST "cue, aimppl, asx, xpl, xspf, zpl, m3u, m3u8, pls"
+
 const char * get_file_icon( const char * file, const bool is_link )
 {
 	char name[ 1000 ], ext[ 100 ];
@@ -104,6 +108,14 @@ static const char * get_file_icon_by_ext( const char * ext, const bool is_link )
 
 	// Databases
 	else if( IS( ext, "sql, sqlite" ) ) return "\ue706";
+	
+	// Audio
+	// lossless
+	else if( IS( ext, LOSSLESS_AUDIO ) ) return "\uf001";
+	//lossy
+	else if ( IS( ext, LOSSY_AUDIO ) ) return "\ufc58";
+	// playlist
+	else if ( IS ( ext, PLAYLIST ) ) return "\uf910";
 
 	// Languages
 
