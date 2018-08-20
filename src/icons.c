@@ -12,6 +12,7 @@
 
 #include <stdarg.h>
 #include <string.h>
+#include <strings.h>
 #include <stdbool.h>
 
 #include "../include/core.h"
@@ -108,7 +109,7 @@ static const char * get_file_icon_by_ext( const char * ext, const bool is_link )
 
 	// Databases
 	else if( IS( ext, "sql, sqlite" ) ) return "\ue706";
-	
+
 	// Audio
 	// lossless
 	else if( IS( ext, LOSSLESS_AUDIO ) ) return "\uf001";

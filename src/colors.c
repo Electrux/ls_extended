@@ -8,7 +8,7 @@
 	before using or altering the project.
 */
 
-#include <string.h>
+#include <strings.h>
 
 #include "../include/colors.h"
 
