@@ -12,7 +12,6 @@
 #define CMDOPTS_H
 
 #include <stdlib.h>
-#include <sys/ioctl.h>
 
 #include "strvec.h"
 

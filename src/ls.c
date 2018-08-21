@@ -108,6 +108,14 @@ int ls( const struct winsize * ws, const char * loc, size_t flags, int loc_count
 		display( "{bw}%s{0}:\n", final_loc );
 	}
 
+	int pad_shift_user = 0, pad_shift_group = 0;
+	if( flags & OPT_L ) {
+		for( int i = 0; i < str_vec_get_count( locs ); ++i ) {
+			struct stat st;
+			int err = lstat( final_loc, & st );
+		}
+	}
+
 	for( int i = 0; i < ( int )str_vec_get_count( locs ); ++i ) {
 		if( !( flags & OPT_L ) && items_per_line_ctr == 0 ) display( " " );
 		// don't pad shift if the item is last on the line since pad won't be needed
