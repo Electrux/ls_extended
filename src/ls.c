@@ -71,7 +71,7 @@ int ls( const struct winsize * ws, const char * loc, size_t flags, int loc_count
 	struct stat tmp_st;
 	int tmp_st_res = stat( final_loc, & tmp_st );
 	if( tmp_st_res != 0 ) {
-		if(errno == ENOENT){
+		if( errno == ENOENT ) {
 			display( "{s}Given path {r}%s{s} does not exist {0}({p}ENOENT{0})\n", final_loc );
 		} else {
 			display( "{p}Something went wrong in fetching information of {r}%s{0}, {p}error{0}: {s}%d\n", final_loc, errno );
@@ -191,10 +191,11 @@ static int display_loc_info( const char * path, const char * loc, size_t flags, 
 			return SUCCESS;
 		}
 
-		char* loc_mut = (char*)loc;
-		for(int i = 0; i < strlen(loc); i++){
-			if(loc[i] == '\r'){
-				loc_mut[i] = '?';
+		char* loc_mut = ( char * )loc;
+		int loc_len = strlen( loc );
+		for( int i = 0; i < loc_len; ++i ) {
+			if( loc[ i ] == '\r' ){
+				loc_mut[ i ] = '?';
 			}
 		}
 		display_padded( max_file_len + utf_spaces, "{g}%s %s{0}", icon, loc );
@@ -254,13 +255,16 @@ static int display_loc_info( const char * path, const char * loc, size_t flags, 
 	display( "\t{w}%s", mtime );
 
 	// file/folder name
-	if( S_ISDIR( stats.st.st_mode ) ) display( "\t{b}%s %s", icon, loc );
-	else if( S_ISLNK( stats.st.st_mode ) ) display( "\t{y}%s %s{0}" , icon, loc );
-	else {
-		char* loc_mut = (char*)loc;
-		for(int i = 0; i < strlen(loc); i++){
-			if(loc[i] == '\r'){
-				loc_mut[i] = '?';
+	if( S_ISDIR( stats.st.st_mode ) ) {
+		display( "\t{b}%s %s", icon, loc );
+	} else if( S_ISLNK( stats.st.st_mode ) ) {
+		display( "\t{y}%s %s{0}" , icon, loc );
+	} else {
+		char * loc_mut = ( char * )loc;
+		int loc_len = strlen( loc );
+		for( int i = 0; i < loc_len; ++i ){
+			if( loc[ i ] == '\r' ) {
+				loc_mut[ i ] = '?';
 			}
 		}
 		display( "\t{g}%s %s", icon, loc );
