@@ -1,4 +1,4 @@
-language: cpp
+language: c
 sudo: required
 
 matrix:
@@ -13,7 +13,7 @@ matrix:
     - os: osx
       osx_image: xcode9.3beta
       compiler: clang
-      env: COMPILER='clang++' BUILD_TYPE='Release'
+      env: COMPILER='clang' BUILD_TYPE='Release'
 
 #install:
 #  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update && brew tap Electrux/ccp4m && brew install yaml-cpp ccp4m          ; fi
