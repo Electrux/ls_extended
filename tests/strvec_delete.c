@@ -17,7 +17,7 @@
 int main()
 {
 	struct str_vec * strs = str_vec_create();
-	char * test = "Hello world";
+	const char * test = "Hello world";
 	for( int i = 0; i < 10; ++i ) {
 		str_vec_add( strs, test );
 	}
