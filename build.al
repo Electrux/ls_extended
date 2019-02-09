@@ -1,5 +1,5 @@
 project( ls_extended ) {
-	version( 1.0.8 )
+	version( 1.1.0 )
 	language( c, 11 )
 	license( bsd3 )
 	author( Electrux, "ElectruxRedsworth@gmail.com" )
