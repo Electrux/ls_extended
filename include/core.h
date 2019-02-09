@@ -15,8 +15,8 @@
 #include <stdint.h>
 
 static const uint8_t VERSION_MAIN = 1;
-static const uint8_t VERSION_SUB = 0;
-static const uint8_t VERSION_PATCH = 8;
+static const uint8_t VERSION_SUB = 1;
+static const uint8_t VERSION_PATCH = 0;
 
 enum ERRORS
 {
