@@ -5,7 +5,7 @@ project( ls_extended ) {
 	author( Electrux, "ElectruxRedsworth@gmail.com" )
 }
 
-builds.add_c_flags( "-O2" )
+builds.add_flags( "-O2" )
 
 builds( bin ) {
 	sources( "src/(.*)\.c" )
