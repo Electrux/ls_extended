@@ -252,7 +252,7 @@ static int display_loc_info( const char * path, const char * loc, size_t flags, 
 	// last modified time
 	char mtime[ 30 ];
 	strftime( mtime, 30, "%h %e %H:%M", gmtime( & stats.st.st_mtime ) );
-	display( "\t{w}%s", mtime );
+	display( "\t{m}%s", mtime );
 
 	// file/folder name
 	if( S_ISDIR( stats.st.st_mode ) ) {
