@@ -11,9 +11,9 @@
 #include "disp_basic.h"
 
 static void set_widths( vec_t * locs, const int rows, const int cols );
-static void calc_num_rows_cols( const vec_t * locs, const max_lens_t * maxlens, const struct winsize * ws, int * num_rows, int * num_cols, const size_t flags );
+static void calc_num_rows_cols( const vec_t * locs, max_lens_t * maxlens, const struct winsize * ws, int * num_rows, int * num_cols, const size_t flags );
 
-void disp_basic( vec_t * locs, const struct winsize * ws, const max_lens_t * maxlens, const size_t flags )
+void disp_basic( vec_t * locs, const struct winsize * ws, max_lens_t * maxlens, const size_t flags )
 {
 	int rows, cols;
 	calc_num_rows_cols( locs, maxlens, ws, & rows, & cols, flags );
@@ -53,7 +53,6 @@ static void set_widths( vec_t * locs, const int rows, const int cols )
 			const stat_info_t * stats = vec_get_data( locs, i );
 			int l1 = utf8_strlen( stats->name );
 			if( maxlen < l1 + 1 ) maxlen = l1 + 1;
-			//disp( stdout, "len %d of %s\n", l1, stats->name );
 			++i;
 		}
 		i = tmpi;
@@ -66,11 +65,13 @@ static void set_widths( vec_t * locs, const int rows, const int cols )
 	}
 }
 
-static void calc_num_rows_cols( const vec_t * locs, const max_lens_t * maxlens, const struct winsize * ws, int * num_rows, int * num_cols, const size_t flags )
+static void calc_num_rows_cols( const vec_t * locs, max_lens_t * maxlens, const struct winsize * ws, int * num_rows, int * num_cols, const size_t flags )
 {
 	int count = vec_count( locs );
+	if( maxlens->name == 0 ) maxlens->name = 1;
 	* num_cols = ( ws->ws_col / maxlens->name );
 	* num_rows = count / * num_cols;
+	if( * num_rows <= 0 ) * num_rows = 1;
 	if( * num_cols > count ) { * num_rows = 1; * num_cols = count; return; }
 	if( flags & OPT_1 ) { * num_rows = count; * num_cols = 1; return; }
 
