@@ -70,6 +70,7 @@ static void calc_num_rows_cols( const vec_t * locs, max_lens_t * maxlens, const 
 	int count = vec_count( locs );
 	if( maxlens->name == 0 ) maxlens->name = 1;
 	* num_cols = ( ws->ws_col / maxlens->name );
+	if( * num_cols <= 0 ) * num_cols = 1;
 	* num_rows = count / * num_cols;
 	if( * num_rows <= 0 ) * num_rows = 1;
 	if( * num_cols > count ) { * num_rows = 1; * num_cols = count; return; }
