@@ -51,8 +51,7 @@ static void set_widths( vec_t * locs, const int rows, const int cols )
 		for( int r = 0; r < rows; ++r ) {
 			if( i >= count ) continue;
 			const stat_info_t * stats = vec_get_data( locs, i );
-			int l1 = utf8_strlen( stats->name );
-			if( maxlen < l1 + 1 ) maxlen = l1 + 1;
+			if( maxlen < stats->namelen + 1 ) maxlen = stats->namelen + 1;
 			++i;
 		}
 		i = tmpi;
@@ -92,9 +91,7 @@ begin:
 		for( int r = 0; r < * num_rows; ++r ) {
 			if( i >= count ) continue;
 			const stat_info_t * stats = vec_get_data( locs, i );
-			int l1 = utf8_strlen( stats->name );
-			int l2 = utf8_strlen( stats->icon );
-			if( maxlen < l1 + l2 + lastadd ) maxlen = l1 + l2 + lastadd;
+			if( maxlen < stats->namelen + stats->iconlen + lastadd ) maxlen = stats->namelen + stats->iconlen + lastadd;
 			++i;
 		}
 		tot_len += maxlen;

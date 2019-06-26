@@ -25,7 +25,11 @@ typedef struct
 	char ext[ 30 ];
 	char icon[ 30 ];
 	char size[ 30 ];
+	char user[ 200 ];
+	char grp[ 200 ];
 	int width;
+	int namelen;
+	int iconlen;
 	struct stat st;
 	bool lnk_is_dead;
 	int lnk_jumps;

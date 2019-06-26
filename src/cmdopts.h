@@ -23,9 +23,10 @@ static const size_t OPT_G = 1 << 4;
 static const size_t OPT_H = 1 << 5;
 static const size_t OPT_I = 1 << 6;
 static const size_t OPT_L = 1 << 7;
-static const size_t OPT_T = 1 << 8;
-static const size_t OPT_S = 1 << 9;
-static const size_t OPT_1 = 1 << 10;
+static const size_t OPT_N = 1 << 8; // no icons
+static const size_t OPT_T = 1 << 9;
+static const size_t OPT_S = 1 << 10;
+static const size_t OPT_1 = 1 << 11;
 
 size_t get_cmd_opts( const int argc, const char ** argv, vec_t * locs );
 

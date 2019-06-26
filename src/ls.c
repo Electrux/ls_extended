@@ -138,16 +138,18 @@ static vec_t * generate_file_vec( DIR * dir, max_lens_t * maxlens, const char * 
 		strcpy( stats.name, "\0" );
 		strcpy( stats.ext, "\0" );
 		split_file( di->d_name, stats.name, stats.ext );
-		if( S_ISDIR( stats.lnk_st.st_mode ) ) {
-			strcpy( stats.icon, get_dir_icon( di->d_name, S_ISLNK( stats.st.st_mode ) ) );
-		} else {
-			strcpy( stats.icon, get_file_icon( stats.name, stats.ext, S_ISLNK( stats.st.st_mode ) ) );
+		if( !( flags & OPT_N ) ) {
+			if( S_ISDIR( stats.lnk_st.st_mode ) ) {
+				strcpy( stats.icon, get_dir_icon( di->d_name, S_ISLNK( stats.st.st_mode ) ) );
+			} else {
+				strcpy( stats.icon, get_file_icon( stats.name, stats.ext, S_ISLNK( stats.st.st_mode ) ) );
+			}
+			strcat( stats.icon, " " );
+			stats.iconlen = utf8_strlen( stats.icon );
 		}
-		strcat( stats.icon, " " );
 
-		int l1 = utf8_strlen( stats.name );
-		int l2 = utf8_strlen( stats.icon );
-		if( maxlens->name < l1 + l2 ) maxlens->name = l1 + l2;
+		stats.namelen = utf8_strlen( stats.name );
+		if( maxlens->name < stats.namelen + stats.iconlen ) maxlens->name = stats.namelen + stats.iconlen;
 
 		update_max_lens( & stats, maxlens, flags );
 		if( ( flags & OPT_S ) && di->d_type == DT_DIR ) vec_add( dir_locs, & stats );
@@ -219,7 +221,11 @@ static void reset_stats( stat_info_t * stats )
 	stats->lnk_is_dead = false;
 	stats->lnk_loc[ 0 ] = '\0';
 	stats->size[ 0 ] = '\0';
+	stats->user[ 0 ] = '\0';
+	stats->grp[ 0 ] = '\0';
 	stats->width = 0;
+	stats->namelen = 0;
+	stats->iconlen = 0;
 }
 
 static void update_max_lens( stat_info_t * stats, max_lens_t * maxlens, const size_t flags )
@@ -235,12 +241,22 @@ static void update_max_lens( stat_info_t * stats, max_lens_t * maxlens, const si
 	struct passwd * usr = getpwuid( stats->st.st_uid );
 	struct group * grp = getgrgid( stats->st.st_gid );
 
-	if( usr == NULL ) len = numlen( stats->st.st_uid );
-	else len = utf8_strlen( usr->pw_name );
+	if( usr == NULL ) {
+		sprintf( stats->user, "%zu", ( size_t )stats->st.st_uid );
+		len = numlen( stats->st.st_uid );
+	} else {
+		strcpy( stats->user, usr->pw_name );
+		len = utf8_strlen( usr->pw_name );
+	}
 	if( maxlens->user < len ) maxlens->user = len;
 
-	if( grp == NULL ) len = numlen( stats->st.st_gid );
-	else len = utf8_strlen( grp->gr_name );
+	if( grp == NULL ) {
+		sprintf( stats->grp, "%zu", ( size_t )stats->st.st_gid );
+		len = numlen( stats->st.st_gid );
+	} else {
+		strcpy( stats->grp, grp->gr_name );
+		len = utf8_strlen( grp->gr_name );
+	}
 	if( maxlens->grp < len ) maxlens->grp = len;
 
 	if( flags & OPT_I ) {

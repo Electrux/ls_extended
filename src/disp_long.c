@@ -7,8 +7,6 @@
 	before using or altering the project.
 */
 
-#include <pwd.h>
-#include <grp.h>
 #include <time.h>
 
 #include "cmdopts.h"
@@ -48,14 +46,8 @@ void disp_long( vec_t * locs, const struct winsize * ws, const max_lens_t * maxl
 		disp( stdout, " {0}%-*d", maxlens->links + 1, stats->st.st_nlink );
 
 		// user and group
-		struct passwd * usr = getpwuid( stats->st.st_uid );
-		struct group * grp = getgrgid( stats->st.st_gid );
-
-		if( usr == NULL ) disp( stdout, "{g}%-*d", maxlens->user + 1, stats->st.st_uid );
-		else disp( stdout, "{g}%-*s", maxlens->user + 1, usr->pw_name );
-
-		if( grp == NULL ) disp( stdout, "{g}%-*d", maxlens->grp + 1, stats->st.st_gid );
-		else disp( stdout, "{g}%-*s", maxlens->grp + 1, grp->gr_name );
+		disp( stdout, "{g}%-*s", maxlens->user + 1, stats->user );
+		disp( stdout, "{g}%-*s", maxlens->grp + 1, stats->grp );
 
 		// file size
 		disp( stdout, "{y}%-*s", maxlens->size + 1, stats->size );
