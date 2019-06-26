@@ -1,9 +1,8 @@
 /*
-	Copyright (c) 2018, Electrux
+	Copyright (c) 2019, Electrux
 	All rights reserved.
 	Using the BSD 3-Clause license for the project,
 	main LICENSE file resides in project's root directory.
-
 	Please read that file and understand the license terms
 	before using or altering the project.
 */
@@ -13,7 +12,7 @@
 
 #include <stdlib.h>
 
-#include "strvec.h"
+#include "vec.h"
 
 // Option bit masks
 static const size_t OPT_A = 1 << 0;
@@ -28,6 +27,6 @@ static const size_t OPT_T = 1 << 8;
 static const size_t OPT_S = 1 << 9;
 static const size_t OPT_1 = 1 << 10;
 
-size_t get_cmd_opts( const int argc, const char ** argv, struct str_vec * locs );
+size_t get_cmd_opts( const int argc, const char ** argv, vec_t * locs );
 
 #endif // CMDOPTS_H

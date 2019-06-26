@@ -1,9 +1,8 @@
 /*
-	Copyright (c) 2018, Electrux
+	Copyright (c) 2019, Electrux
 	All rights reserved.
 	Using the BSD 3-Clause license for the project,
 	main LICENSE file resides in project's root directory.
-
 	Please read that file and understand the license terms
 	before using or altering the project.
 */
@@ -11,11 +10,9 @@
 #include <stdint.h>
 #include <string.h>
 
-#include "../include/strvec.h"
+#include "cmdopts.h"
 
-#include "../include/cmdopts.h"
-
-size_t get_cmd_opts( const int argc, const char ** argv, struct str_vec * locs )
+size_t get_cmd_opts( const int argc, const char ** argv, vec_t * locs )
 {
 	size_t flags = 0;
 	uint8_t found_loc = 0;
@@ -23,7 +20,7 @@ size_t get_cmd_opts( const int argc, const char ** argv, struct str_vec * locs )
 	for( int i = 1; i < argc; ++i ) {
 		// fetch the location to be ls'ed in
 		if( argv[ i ][ 0 ] != '-' ) {
-			str_vec_add( locs, argv[ i ] );
+			vec_add( locs, argv[ i ] );
 			continue;
 		}
 
@@ -43,6 +40,6 @@ size_t get_cmd_opts( const int argc, const char ** argv, struct str_vec * locs )
 		}
 	}
 
-	if( str_vec_get_count( locs ) == 0 ) str_vec_add( locs, "\0" );
+	if( vec_count( locs ) == 0 ) vec_add( locs, "." );
 	return flags;
 }

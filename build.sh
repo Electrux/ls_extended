@@ -19,7 +19,7 @@ echo "Creating directories ..."
 mkdir -p "buildfiles/src/"
 mkdir -p "bin"
 
-find src -name "*.c" | grep -v "tests" | grep -v "main.c" | while read -r src_file; do
+find src -name "*.c" | grep -v "main.c" | while read -r src_file; do
 	echo "Compiling: $src_file ..."
 	$compiler -O2 -std=gnu99 -c $src_file -o buildfiles/$src_file.o -I/usr/local/include
 	if ! [[ $? == 0 ]]; then

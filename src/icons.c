@@ -1,9 +1,8 @@
 /*
-	Copyright (c) 2018, Electrux
+	Copyright (c) 2019, Electrux
 	All rights reserved.
 	Using the BSD 3-Clause license for the project,
 	main LICENSE file resides in project's root directory.
-
 	Please read that file and understand the license terms
 	before using or altering the project.
 */
@@ -15,9 +14,8 @@
 #include <strings.h>
 #include <stdbool.h>
 
-#include "../include/core.h"
-
-#include "../include/icons.h"
+#include "core.h"
+#include "icons.h"
 
 // Default file icon is text file or normal link file
 #define DEFAULT_FILE_ICON "\uf15c"
@@ -39,10 +37,8 @@ static bool find_in( const char * of, const char * values, bool is_exact_match )
 #define LOSSY_AUDIO "amr, 3ga, mp1, mp2, mp3, spx, gsm, wma, aac, mpc, vqf, ots, swa, vox, voc, dwd, smp, ogg, oga, opus"
 #define PLAYLIST "cue, aimppl, asx, xpl, xspf, zpl, m3u, m3u8, pls"
 
-const char * get_file_icon( const char * file, const bool is_link )
+const char * get_file_icon( const char * name, const char * ext, const bool is_link )
 {
-	char name[ 1000 ], ext[ 100 ];
-	split_file( file, name, ext );
 	if( strcmp( ext, "\0" ) != 0 ) {
 		const char * ext_icon = get_file_icon_by_ext( ext, is_link );
 		if( strcmp( ext_icon, DEFAULT_FILE_ICON ) != 0 ) return ext_icon;
@@ -175,7 +171,8 @@ static const char * get_file_icon_by_name( const char * name, const bool is_link
 {
 	if( BEGINS( name, "LICENSE, license, copying, COPYING" ) ) return "\uf2c2";
 	else if( BEGINS( name, "Makefile" ) ) return "\ue779";
-	// TODO
+	else if( BEGINS( name, "Dockerfile" ) ) return "\uf308";
+	// TODO:
 	if( is_link ) return DEFAULT_LINK_FILE_ICON;
 	return DEFAULT_FILE_ICON;
 }
