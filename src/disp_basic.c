@@ -15,6 +15,8 @@ static void calc_num_rows_cols( const vec_t * locs, max_lens_t * maxlens, const 
 
 void disp_basic( vec_t * locs, const struct winsize * ws, max_lens_t * maxlens, const size_t flags )
 {
+	int count = vec_count( locs );
+	if( count == 0 ) return;
 	if( maxlens == NULL ) {
 		const stat_info_t * stats = vec_get_data( locs, 0 );
 		if( S_ISDIR( stats->lnk_st.st_mode ) ) {
@@ -33,9 +35,7 @@ void disp_basic( vec_t * locs, const struct winsize * ws, max_lens_t * maxlens, 
 	set_widths( locs, rows, cols );
 
 	int item_line_ctr = 0;
-	int loc_count = vec_count( locs );
 
-	int count = vec_count( locs );
 	for( int r = 0; r < rows; ++r ) {
 		for( int c = 0; c < cols; ++c ) {
 			int i = c * rows + r;

@@ -22,7 +22,7 @@
 typedef struct
 {
 	char name[ MAX_STR_LEN ];
-	char ext[ 30 ];
+	char ext[ 513 ];
 	char icon[ 30 ];
 	char size[ 30 ];
 	char user[ 200 ];

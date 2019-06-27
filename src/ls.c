@@ -81,6 +81,19 @@ int ls( const struct winsize * ws, const char * loc, size_t flags, int loc_count
 			strcat( stats.icon, " " );
 			stats.iconlen = utf8_strlen( stats.icon );
 		}
+		if( !( flags & OPT_L ) ) {
+			int spcs = 2;
+			if( S_ISLNK( stats.st.st_mode ) ) {
+				strcat( stats.name, "@" );
+				--spcs;
+			}
+			if( S_ISDIR( stats.lnk_st.st_mode ) ) {
+				strcat( stats.name, "/" );
+				--spcs;
+			}
+			if( spcs == 2 ) strcat( stats.name, "  " );
+			else if( spcs == 1 ) strcat( stats.name, " " );
+		}
 		update_data_and_max_lens( & stats, NULL, flags );
 		vec_t * loc = vec_create( sizeof( stat_info_t ), NULL );
 		vec_add( loc, & stats );
@@ -100,11 +113,17 @@ int ls( const struct winsize * ws, const char * loc, size_t flags, int loc_count
 		return LOC_NOT_OPENED;
 	}
 
+	char currdir[ MAX_STR_LEN ];
+	getcwd( currdir, MAX_STR_LEN - 1 );
+	chdir( final_loc );
 	max_lens_t maxlens;
 	vec_t * locs = generate_file_vec( dir, & maxlens, final_loc, flags );
 	closedir( dir );
 
-	if( locs == NULL ) return VEC_INIT_FAIL;
+	if( locs == NULL ) {
+		chdir( currdir );
+		return VEC_INIT_FAIL;
+	}
 
 	if( !( flags & OPT_L ) ) {
 		disp_basic( locs, ws, & maxlens, flags );
@@ -112,6 +131,7 @@ int ls( const struct winsize * ws, const char * loc, size_t flags, int loc_count
 	}
 	disp_long( locs, ws, & maxlens, flags );
 end:
+	chdir( currdir );
 	vec_destroy( & locs );
 	return 0;
 }
