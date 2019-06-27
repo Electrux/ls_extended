@@ -15,6 +15,19 @@ static void calc_num_rows_cols( const vec_t * locs, max_lens_t * maxlens, const 
 
 void disp_basic( vec_t * locs, const struct winsize * ws, max_lens_t * maxlens, const size_t flags )
 {
+	if( maxlens == NULL ) {
+		const stat_info_t * stats = vec_get_data( locs, 0 );
+		if( S_ISDIR( stats->lnk_st.st_mode ) ) {
+			disp( stdout, "{b}%s%s{0}", stats->icon, stats->name );
+		} else if( S_ISLNK( stats->st.st_mode ) ) {
+			if( stats->lnk_is_dead ) disp( stdout, "{r}%s%-*s{0}", stats->icon, stats->name );
+			else disp( stdout, "{y}%s%s{0}", stats->icon, stats->name );
+		} else {
+			disp( stdout, "{g}%s%s{0}", stats->icon, stats->name );
+		}
+		disp( stdout, "\n" );
+		return;
+	}
 	int rows, cols;
 	calc_num_rows_cols( locs, maxlens, ws, & rows, & cols, flags );
 	set_widths( locs, rows, cols );

@@ -36,7 +36,7 @@
 static vec_t * generate_file_vec( DIR * dir, max_lens_t * maxlens, const char * base_loc, const size_t flags );
 static int get_stats( const char * path, stat_info_t * stats );
 static void reset_stats( stat_info_t * stats );
-static void update_max_lens( stat_info_t * stats, max_lens_t * maxlens, const size_t flags );
+static void update_data_and_max_lens( stat_info_t * stats, max_lens_t * maxlens, const size_t flags );
 static void format_file_size( const size_t size, char * res );
 
 int ls( const struct winsize * ws, const char * loc, size_t flags, int loc_count )
@@ -66,9 +66,28 @@ int ls( const struct winsize * ws, const char * loc, size_t flags, int loc_count
 		return errno;
 	}
 	if( !S_ISDIR( tmp_st.st_mode ) ) {
-		int res = 0;//display_loc_info( NULL, final_loc, flags, 0 );
-		if( !( flags & OPT_L ) ) disp( stdout, "\n" );
-		return res;
+		stat_info_t stats;
+		reset_stats( & stats );
+
+		int err = get_stats( final_loc, & stats );
+		if( err != 0 ) return err;
+		split_file( final_loc, stats.name, stats.ext );
+		if( !( flags & OPT_N ) ) {
+			if( S_ISDIR( stats.lnk_st.st_mode ) ) {
+				strcpy( stats.icon, get_dir_icon( final_loc, S_ISLNK( stats.st.st_mode ) ) );
+			} else {
+				strcpy( stats.icon, get_file_icon( stats.name, stats.ext, S_ISLNK( stats.st.st_mode ) ) );
+			}
+			strcat( stats.icon, " " );
+			stats.iconlen = utf8_strlen( stats.icon );
+		}
+		update_data_and_max_lens( & stats, NULL, flags );
+		vec_t * loc = vec_create( sizeof( stat_info_t ), NULL );
+		vec_add( loc, & stats );
+		if( !( flags & OPT_L ) ) disp_basic( loc, ws, NULL, flags );
+		else disp_long( loc, ws, NULL, flags );
+		vec_destroy( & loc );
+		return 0;
 	}
 
 	if( final_loc[ strlen( final_loc ) - 1 ] != '/' ) {
@@ -135,8 +154,6 @@ static vec_t * generate_file_vec( DIR * dir, max_lens_t * maxlens, const char * 
 		int err = get_stats( loc, & stats );
 		if( err != 0 ) goto fail;
 
-		strcpy( stats.name, "\0" );
-		strcpy( stats.ext, "\0" );
 		split_file( di->d_name, stats.name, stats.ext );
 		if( !( flags & OPT_N ) ) {
 			if( S_ISDIR( stats.lnk_st.st_mode ) ) {
@@ -152,7 +169,7 @@ static vec_t * generate_file_vec( DIR * dir, max_lens_t * maxlens, const char * 
 		if( maxlens->name < stats.namelen + stats.iconlen ) maxlens->name = stats.namelen + stats.iconlen;
 		stats.width = get_extra_spaces( stats.name );
 
-		update_max_lens( & stats, maxlens, flags );
+		update_data_and_max_lens( & stats, maxlens, flags );
 		if( ( flags & OPT_S ) && di->d_type == DT_DIR ) vec_add( dir_locs, & stats );
 		else vec_add( locs, & stats );
 	}
@@ -220,6 +237,8 @@ static void reset_stats( stat_info_t * stats )
 {
 	stats->lnk_jumps = 0;
 	stats->lnk_is_dead = false;
+	stats->name[ 0 ] = '\0';
+	stats->ext[ 0 ] = '\0';
 	stats->lnk_loc[ 0 ] = '\0';
 	stats->size[ 0 ] = '\0';
 	stats->user[ 0 ] = '\0';
@@ -229,50 +248,52 @@ static void reset_stats( stat_info_t * stats )
 	stats->iconlen = 0;
 }
 
-static void update_max_lens( stat_info_t * stats, max_lens_t * maxlens, const size_t flags )
+static void update_data_and_max_lens( stat_info_t * stats, max_lens_t * maxlens, const size_t flags )
 {
 	int len;
 	if( !( flags & OPT_L ) ) {
 		return;
 	}
 
-	len = numlen( stats->st.st_nlink );
-	if( maxlens->links < len ) maxlens->links = len;
+	if( maxlens != NULL ) {
+		len = numlen( stats->st.st_nlink );
+		if( maxlens->links < len ) maxlens->links = len;
+	}
 
 	struct passwd * usr = getpwuid( stats->st.st_uid );
 	struct group * grp = getgrgid( stats->st.st_gid );
 
 	if( usr == NULL ) {
 		sprintf( stats->user, "%zu", ( size_t )stats->st.st_uid );
-		len = numlen( stats->st.st_uid );
+		if( maxlens != NULL ) len = numlen( stats->st.st_uid );
 	} else {
 		strcpy( stats->user, usr->pw_name );
-		len = utf8_strlen( usr->pw_name );
+		if( maxlens != NULL ) len = utf8_strlen( usr->pw_name );
 	}
-	if( maxlens->user < len ) maxlens->user = len;
+	if( maxlens != NULL && maxlens->user < len ) maxlens->user = len;
 
 	if( grp == NULL ) {
 		sprintf( stats->grp, "%zu", ( size_t )stats->st.st_gid );
-		len = numlen( stats->st.st_gid );
+		if( maxlens != NULL ) len = numlen( stats->st.st_gid );
 	} else {
 		strcpy( stats->grp, grp->gr_name );
-		len = utf8_strlen( grp->gr_name );
+		if( maxlens != NULL ) len = utf8_strlen( grp->gr_name );
 	}
-	if( maxlens->grp < len ) maxlens->grp = len;
+	if( maxlens != NULL && maxlens->grp < len ) maxlens->grp = len;
 
-	if( flags & OPT_I ) {
+	if( maxlens != NULL && flags & OPT_I ) {
 		len = numlen( stats->st.st_ino );
 		if( maxlens->inode < len ) maxlens->inode = len;
 	}
 
 	if( flags & OPT_H ) {
 		format_file_size( stats->st.st_size, stats->size );
-		len = utf8_strlen( stats->size );
+		if( maxlens != NULL ) len = utf8_strlen( stats->size );
 	} else {
 		sprintf( stats->size, "%zu", ( size_t )stats->st.st_size );
-		len = numlen( stats->st.st_size );
+		if( maxlens != NULL ) len = numlen( stats->st.st_size );
 	}
-	if( maxlens->size < len ) maxlens->size = len;
+	if( maxlens != NULL && maxlens->size < len ) maxlens->size = len;
 	return;
 }
 
