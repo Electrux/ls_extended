@@ -34,16 +34,24 @@ int main( int argc, char ** argv )
 	vec_t * locs = vec_create( 0, NULL );
 	size_t flags = get_cmd_opts( argc, ( const char ** )argv, locs );
 
-	struct winsize ws;
-	ioctl( STDOUT_FILENO, TIOCGWINSZ, & ws );
-
-	size_t loc_count = vec_count( locs );
-	int res = 0;
-	for( size_t i = 0; i < loc_count; ++i ) {
-		res = ls( & ws, ( const char * )vec_get_data( locs, i ), flags, loc_count );
-		if( res != 0 ) break;
+	if( flags & OPT_CAPS_N ) {
+		* disp_cols() = false;
 	}
 
+	if( flags & OPT_V ) {
+		disp( stdout, "{p}ls extended version{0}: {s}%d{0}.{s}%d{0}.{s}%d{0}\n", VERSION_MAIN, VERSION_SUB, VERSION_PATCH );
+	} else {
+		struct winsize ws;
+		ioctl( STDOUT_FILENO, TIOCGWINSZ, & ws );
+
+		size_t loc_count = vec_count( locs );
+		int res = 0;
+		for( size_t i = 0; i < loc_count; ++i ) {
+			res = ls( & ws, ( const char * )vec_get_data( locs, i ), flags, loc_count );
+			if( res != 0 ) break;
+		}
+		return res;
+	}
 	vec_destroy( & locs );
-	return res;
+	return 0;
 }

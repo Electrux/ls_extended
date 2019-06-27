@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <stdbool.h>
 
 static const int VERSION_MAIN = 2;
 static const int VERSION_SUB = 0;
@@ -32,6 +33,9 @@ void split_file( const char * file, char * name, char * ext );
 // created to allow colored display using string interpolation
 // and printf like syntax for variables
 void disp( FILE * out, const char * fmt, ... );
+// enable or disable colorization
+bool * disp_cols();
+
 
 int numlen( unsigned long long num );
 

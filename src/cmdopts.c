@@ -25,7 +25,7 @@ size_t get_cmd_opts( const int argc, const char ** argv, vec_t * locs )
 		}
 
 		size_t len = strlen( argv[ i ] );
-		for( size_t j = 1; j <= len; ++j ) {
+		for( size_t j = 1; j < len; ++j ) {
 			if( argv[ i ][ j ] == 'a' ) flags |= OPT_A;
 			else if( argv[ i ][ j ] == 'A' ) flags |= OPT_CAPS_A;
 			else if( argv[ i ][ j ] == 'd' ) flags |= OPT_D;
@@ -35,8 +35,10 @@ size_t get_cmd_opts( const int argc, const char ** argv, vec_t * locs )
 			else if( argv[ i ][ j ] == 'i' ) flags |= OPT_I;
 			else if( argv[ i ][ j ] == 'l' ) flags |= OPT_L;
 			else if( argv[ i ][ j ] == 'n' ) flags |= OPT_N;
-			else if( argv[ i ][ j ] == 't' ) flags |= OPT_T;
+			else if( argv[ i ][ j ] == 'N' ) flags |= OPT_CAPS_N;
 			else if( argv[ i ][ j ] == 's' ) flags |= OPT_S;
+			else if( argv[ i ][ j ] == 't' ) flags |= OPT_T;
+			else if( argv[ i ][ j ] == 'v' ) flags |= OPT_V;
 			else if( argv[ i ][ j ] == '1' ) flags |= OPT_1;
 		}
 	}

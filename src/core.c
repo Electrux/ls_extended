@@ -40,6 +40,12 @@ void split_file( const char * file, char * name, char * ext )
 	strcpy( name, file );
 }
 
+bool * disp_cols()
+{
+	static bool disp_cols = true;
+	return & disp_cols;
+}
+
 void disp( FILE * out, const char * fmt, ... )
 {
 	int fmtlen = strlen( fmt );
@@ -62,6 +68,7 @@ void disp( FILE * out, const char * fmt, ... )
 			}
 			if( tctr == 0 ) continue;
 			tmp[ tctr ] = '\0';
+			if( * disp_cols() == false ) continue;
 			const char * col = get_col( tmp );
 			if( col == NULL ) continue;
 			res_str[ res_ctr ] = '\0';
