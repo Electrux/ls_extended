@@ -20,7 +20,7 @@ void disp_basic( vec_t * locs, const struct winsize * ws, max_lens_t * maxlens, 
 		if( S_ISDIR( stats->lnk_st.st_mode ) ) {
 			disp( stdout, "{b}%s%s{0}", stats->icon, stats->name );
 		} else if( S_ISLNK( stats->st.st_mode ) ) {
-			if( stats->lnk_is_dead ) disp( stdout, "{r}%s%-*s{0}", stats->icon, stats->name );
+			if( stats->lnk_is_dead ) disp( stdout, "{r}%s%s{0}", stats->icon, stats->name );
 			else disp( stdout, "{y}%s%s{0}", stats->icon, stats->name );
 		} else {
 			disp( stdout, "{g}%s%s{0}", stats->icon, stats->name );

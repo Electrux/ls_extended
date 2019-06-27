@@ -165,12 +165,26 @@ static vec_t * generate_file_vec( DIR * dir, max_lens_t * maxlens, const char * 
 			stats.iconlen = utf8_strlen( stats.icon );
 		}
 
+		if( !( flags & OPT_L ) ) {
+			int spcs = 2;
+			if( S_ISLNK( stats.st.st_mode ) ) {
+				strcat( stats.name, "@" );
+				--spcs;
+			}
+			if( S_ISDIR( stats.lnk_st.st_mode ) ) {
+				strcat( stats.name, "/" );
+				--spcs;
+			}
+			if( spcs == 2 ) strcat( stats.name, "  " );
+			else if( spcs == 1 ) strcat( stats.name, " " );
+		}
+
 		stats.namelen = utf8_strlen( stats.name );
 		if( maxlens->name < stats.namelen + stats.iconlen ) maxlens->name = stats.namelen + stats.iconlen;
 		stats.width = get_extra_spaces( stats.name );
 
 		update_data_and_max_lens( & stats, maxlens, flags );
-		if( ( flags & OPT_S ) && di->d_type == DT_DIR ) vec_add( dir_locs, & stats );
+		if( ( flags & OPT_S ) && S_ISDIR( stats.lnk_st.st_mode ) ) vec_add( dir_locs, & stats );
 		else vec_add( locs, & stats );
 	}
 

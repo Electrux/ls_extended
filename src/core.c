@@ -23,18 +23,16 @@ void split_file( const char * file, char * name, char * ext )
 
 	strcpy( ext, "\0" );
 
-	if( file[ 0 ] != '.' ) {
-		for( int i = file_len; i >= 0; --i ) {
-			if( file[ i ] == '.' ) {
-				encountered_dot = i;
-				break;
-			}
+	for( int i = file_len; i >= 0; --i ) {
+		if( file[ i ] == '.' ) {
+			encountered_dot = i;
+			break;
 		}
 	}
 
 	if( encountered_dot >= 0 ) {
 		ctr = 0;
-		for( int i = encountered_dot; i <= file_len; ++i )
+		for( int i = encountered_dot + 1; i < file_len; ++i )
 			ext[ ctr++ ] = file[ i ];
 		ext[ ctr ] = '\0';
 	}
