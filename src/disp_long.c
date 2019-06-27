@@ -7,6 +7,10 @@
 	before using or altering the project.
 */
 
+#if defined __linux__ && defined __GNUC__ && !defined __clang__
+#define _DEFAULT_SOURCE
+#endif
+
 #include <time.h>
 
 #include "cmdopts.h"

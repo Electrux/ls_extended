@@ -239,6 +239,7 @@ static void reset_stats( stat_info_t * stats )
 	stats->lnk_is_dead = false;
 	stats->name[ 0 ] = '\0';
 	stats->ext[ 0 ] = '\0';
+	stats->icon[ 0 ] = '\0';
 	stats->lnk_loc[ 0 ] = '\0';
 	stats->size[ 0 ] = '\0';
 	stats->user[ 0 ] = '\0';
