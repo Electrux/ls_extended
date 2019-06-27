@@ -58,7 +58,7 @@ static void set_widths( vec_t * locs, const int rows, const int cols )
 		for( int r = 0; r < rows; ++r ) {
 			if( i >= count ) continue;
 			stat_info_t * stats = vec_get_data_mut( locs, i );
-			stats->width = get_extra_spaces( stats->name ) + maxlen;
+			stats->width += maxlen;
 			++i;
 		}
 	}
@@ -91,7 +91,8 @@ begin:
 		for( int r = 0; r < * num_rows; ++r ) {
 			if( i >= count ) continue;
 			const stat_info_t * stats = vec_get_data( locs, i );
-			if( maxlen < stats->namelen + stats->iconlen + lastadd ) maxlen = stats->namelen + stats->iconlen + lastadd;
+			if( maxlen < stats->namelen + stats->iconlen + stats->width + lastadd )
+				maxlen = stats->namelen + stats->iconlen + stats->width + lastadd;
 			++i;
 		}
 		tot_len += maxlen;
