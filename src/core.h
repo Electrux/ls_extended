@@ -36,7 +36,6 @@ void disp( FILE * out, const char * fmt, ... );
 // enable or disable colorization
 bool * disp_cols();
 
-
 int numlen( unsigned long long num );
 
 uint8_t extra_space_count( const char * str, const int used_bytes );
