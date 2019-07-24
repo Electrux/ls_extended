@@ -224,7 +224,6 @@ fail:
 static int get_stats( const char * path, stat_info_t * stats )
 {
 	struct stat tmp_st;
-	fprintf( stdout, "p: %s\n", path );
 	int temp_res = lstat( path, & tmp_st );
 	if( stats->lnk_jumps == 0 ) memcpy( & stats->st, & tmp_st, sizeof( struct stat ) );
 
