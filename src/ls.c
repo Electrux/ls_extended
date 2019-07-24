@@ -113,15 +113,11 @@ int ls( const struct winsize * ws, const char * loc, size_t flags, int loc_count
 		return LOC_NOT_OPENED;
 	}
 
-	char currdir[ MAX_STR_LEN ];
-	getcwd( currdir, MAX_STR_LEN - 1 );
-	chdir( final_loc );
 	max_lens_t maxlens;
 	vec_t * locs = generate_file_vec( dir, & maxlens, final_loc, flags );
 	closedir( dir );
 
 	if( locs == NULL ) {
-		chdir( currdir );
 		return VEC_INIT_FAIL;
 	}
 
@@ -131,7 +127,6 @@ int ls( const struct winsize * ws, const char * loc, size_t flags, int loc_count
 	}
 	disp_long( locs, ws, & maxlens, flags );
 end:
-	chdir( currdir );
 	vec_destroy( & locs );
 	return 0;
 }
@@ -229,6 +224,7 @@ fail:
 static int get_stats( const char * path, stat_info_t * stats )
 {
 	struct stat tmp_st;
+	fprintf( stdout, "p: %s\n", path );
 	int temp_res = lstat( path, & tmp_st );
 	if( stats->lnk_jumps == 0 ) memcpy( & stats->st, & tmp_st, sizeof( struct stat ) );
 
@@ -257,7 +253,12 @@ static int get_stats( const char * path, stat_info_t * stats )
 		if( ( len = readlink( path, buf, sizeof( buf ) - 1 ) ) != -1 ) {
 			buf[ len ] = '\0';
 			if( stats->lnk_jumps == 1 ) strcpy( stats->lnk_loc, buf );
-			return get_stats( buf, stats );
+			char currdir[ MAX_STR_LEN ];
+			getcwd( currdir, MAX_STR_LEN - 1 );
+			chdir( path );
+			int res = get_stats( buf, stats );
+			chdir( currdir );
+			return res;
 		}
 
 		return LOC_NOT_OPENED;
