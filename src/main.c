@@ -16,6 +16,7 @@
 #include "core.h"
 #include "vec.h"
 #include "cmdopts.h"
+#include "sorts.h"
 #include "help.h"
 #include "ls.h"
 
@@ -46,6 +47,7 @@ int main( int argc, char ** argv )
 
 		size_t loc_count = vec_count( locs );
 		int res = 0;
+		set_rev_sort( flags & OPT_R );
 		for( size_t i = 0; i < loc_count; ++i ) {
 			res = ls( & ws, ( const char * )vec_get_data( locs, i ), flags, loc_count );
 			if( res != 0 ) break;

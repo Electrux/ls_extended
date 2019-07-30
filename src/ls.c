@@ -208,10 +208,26 @@ static vec_t * generate_file_vec( DIR * dir, max_lens_t * maxlens, const char * 
 		else vec_add( locs, & stats );
 	}
 
-	vec_sort( locs, sort_name );
+	if( flags & OPT_T ) {
+		vec_sort( locs, sort_mtime );
+	} else if( flags & OPT_CAPS_X ) {
+		vec_sort( locs, sort_ext );
+	} else if( flags & OPT_CAPS_S ) {
+		vec_sort( locs, sort_size );
+	} else {
+		vec_sort( locs, sort_name );
+	}
 
 	if( flags & OPT_S ) {
-		vec_sort( dir_locs, sort_name );
+		if( flags & OPT_T ) {
+			vec_sort( dir_locs, sort_mtime );
+		} else if( flags & OPT_CAPS_X ) {
+			vec_sort( dir_locs, sort_ext );
+		} else if( flags & OPT_CAPS_S ) {
+			vec_sort( dir_locs, sort_size );
+		} else {
+			vec_sort( dir_locs, sort_name );
+		}
 		for( int i = 0; i < vec_count( locs ); ++i )
 			vec_add( dir_locs, vec_get_data( locs, i ) );
 		vec_destroy( & locs );

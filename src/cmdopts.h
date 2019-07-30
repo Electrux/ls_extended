@@ -25,10 +25,13 @@ static const size_t OPT_I = 1 << 6;
 static const size_t OPT_L = 1 << 7;
 static const size_t OPT_N = 1 << 8; // no icons
 static const size_t OPT_CAPS_N = 1 << 9; // no icons, no colors
-static const size_t OPT_S = 1 << 10;
-static const size_t OPT_T = 1 << 11;
-static const size_t OPT_V = 1 << 12;
-static const size_t OPT_1 = 1 << 13;
+static const size_t OPT_R = 1 << 10; // reverse sort order
+static const size_t OPT_S = 1 << 11;
+static const size_t OPT_CAPS_S = 1 << 12;
+static const size_t OPT_T = 1 << 13;
+static const size_t OPT_V = 1 << 14;
+static const size_t OPT_CAPS_X = 1 << 15;
+static const size_t OPT_1 = 1 << 16;
 
 size_t get_cmd_opts( const int argc, const char ** argv, vec_t * locs );
 
