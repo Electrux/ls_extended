@@ -44,8 +44,13 @@ int sort_mtime( const void * a, const void * b )
 {
 	const stat_info_t * aa = * ( const stat_info_t ** )a;
 	const stat_info_t * bb = * ( const stat_info_t ** )b;
+#ifdef __linux__
+	if( get_rev_sort() ) return bb->lnk_st.st_mtim.tv_sec - aa->lnk_st.st_mtim.tv_sec;
+	return aa->lnk_st.st_mtim.tv_sec - bb->lnk_st.st_mtim.tv_sec;
+#else
 	if( get_rev_sort() ) return bb->lnk_st.st_mtimespec.tv_sec - aa->lnk_st.st_mtimespec.tv_sec;
 	return aa->lnk_st.st_mtimespec.tv_sec - bb->lnk_st.st_mtimespec.tv_sec;
+#endif
 }
 
 int sort_size( const void * a, const void * b )
