@@ -39,13 +39,19 @@ static bool find_in( const char * of, const char * values, bool is_exact_match )
 
 #define VIDEO "avi, flv, mkv, mov, mp4, ogv, webm"
 
+static const bool is_default_icon( const char * icon )
+{
+	return strcmp( icon, DEFAULT_FILE_ICON ) == 0 || strcmp( icon, DEFAULT_LINK_FILE_ICON ) == 0;
+}
+
 const char * get_file_icon( const char * name, const char * ext, const bool is_link )
 {
-	if( strcmp( ext, "\0" ) != 0 ) {
+	const char * file_icon = get_file_icon_by_name( name, is_link );
+	if( strcmp( ext, "\0" ) != 0 && is_default_icon( file_icon ) ) {
 		const char * ext_icon = get_file_icon_by_ext( ext, is_link );
-		if( strcmp( ext_icon, DEFAULT_FILE_ICON ) != 0 ) return ext_icon;
+		return ext_icon;
 	}
-	return get_file_icon_by_name( name, is_link );
+	return file_icon;
 }
 
 const char * get_dir_icon( const char * dir, const bool is_link )
