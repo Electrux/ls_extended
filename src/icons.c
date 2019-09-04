@@ -183,7 +183,7 @@ static const char * get_file_icon_by_name( const char * name, const bool is_link
 {
 	// Development
 	if( BEGINS( name, "Makefile" ) ) return "\ue779";
-	else if( BEGINS( name, "Dockerfile" ) ) return "\uf308";
+	else if( BEGINS( name, "Dockerfile, docker-compose" ) ) return "\uf308";
 
 	// Other
 	if( BEGINS( name, "LICENSE, license, copying, COPYING" ) ) return "\uf2c2";
