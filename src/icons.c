@@ -62,6 +62,7 @@ const char * get_dir_icon( const char * dir, const bool is_link )
 	else if( BEGINS( dir, ".vs, .vscode" ) ) return "\ue70c";
 	else if( BEGINS( dir, ".weechat" ) ) return "\ufbee";
 	else if( BEGINS( dir, "application" ) ) return "\ufb13";
+	else if( BEGINS( dir, "bin, config" ) ) return "\ue5fc";
 	else if( BEGINS( dir, "desktop" ) ) return "\uf108";
 	else if( BEGINS( dir, "download" ) ) return "\uf74c";
 	else if( BEGINS( dir, "library" ) ) return "\uf830";
