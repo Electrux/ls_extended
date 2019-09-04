@@ -78,7 +78,7 @@ const char * get_dir_icon( const char * dir, const bool is_link )
 	else if( BEGINS( dir, "music, songs, audio" ) ) return "\uf832";
 	else if( BEGINS( dir, "photo, picture" ) ) return "\uf03e";
 	else if( IS( dir, "__pycache__" ) ) return "\uf81f";
-	else if( IS( dir, "video" ) ) return "\uf03d";
+	else if( BEGINS( dir, "video" ) ) return "\uf03d";
 
 	if( is_link ) return DEFAULT_LINK_DIR_ICON;
 	return DEFAULT_DIR_ICON;
