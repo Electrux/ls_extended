@@ -37,6 +37,8 @@ static bool find_in( const char * of, const char * values, bool is_exact_match )
 #define LOSSY_AUDIO "amr, 3ga, mp1, mp2, mp3, spx, gsm, wma, aac, mpc, vqf, ots, swa, vox, voc, dwd, smp, ogg, oga, opus"
 #define PLAYLIST "cue, aimppl, asx, xpl, xspf, zpl, m3u, m3u8, pls"
 
+#define VIDEO "avi, flv, mkv, mov, mp4, ogv, webm"
+
 const char * get_file_icon( const char * name, const char * ext, const bool is_link )
 {
 	if( strcmp( ext, "\0" ) != 0 ) {
@@ -70,6 +72,7 @@ const char * get_dir_icon( const char * dir, const bool is_link )
 	else if( BEGINS( dir, "music, songs, audio" ) ) return "\uf832";
 	else if( BEGINS( dir, "photo, picture" ) ) return "\uf03e";
 	else if( IS( dir, "__pycache__" ) ) return "\uf81f";
+	else if( IS( dir, "video" ) ) return "\uf03d";
 
 	if( is_link ) return DEFAULT_LINK_DIR_ICON;
 	return DEFAULT_DIR_ICON;
@@ -114,7 +117,9 @@ static const char * get_file_icon_by_ext( const char * ext, const bool is_link )
 	else if ( IS( ext, LOSSY_AUDIO ) ) return "\ufc58";
 	// playlist
 	else if ( IS ( ext, PLAYLIST ) ) return "\uf910";
-
+	
+	// Video
+	else if ( IS( ext, VIDEO ) ) return "\uf03d";
 	// Languages
 
 	// C, C++
