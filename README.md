@@ -1,6 +1,6 @@
 # ls_extended
 
-[![Build Status](https://travis-ci.com/Electrux/ls_extended.svg?branch=master)](https://travis-ci.com/Electrux/ls_extended)
+[![Build Status](https://api.cirrus-ci.com/github/Electrux/ls_extended.svg?branch=master)](https://cirrus-ci.com/github/Electrux/ls_extended)
 
 ls with coloring and icons
 

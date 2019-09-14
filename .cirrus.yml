@@ -2,6 +2,8 @@ task:
   name: Ubuntu 14.04 gcc 4.8.4
   container:
     image: ubuntu:14.04
+  env:
+    COMPILER: gcc-4.8.4
   compile_script: ./build.sh
   tests_script: ./bin/ls_extended
 
