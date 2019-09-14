@@ -1,0 +1,34 @@
+task:
+  name: Ubuntu 14.04 gcc 4.8.4
+  container:
+    image: ubuntu:14.04
+  compile_script: ./build.sh
+  tests_script: ./bin/ls_extended
+
+task:
+  name: Ubuntu 14.04 clang 3.4.0
+  container:
+    image: teeks99/clang-ubuntu:3.4
+  compile_script: ./build.sh
+  tests_script: ./bin/ls_extended
+
+task:
+  name: Debian 8 gcc 6.5.0
+  container:
+    image: gcc:6
+  compile_script: ./build.sh
+  tests_script: ./bin/ls_extended
+
+task:
+  name: FreeBSD 10.4 clang 3.4.1
+  freebsd_instance:
+    image: freebsd-10-4-release-amd64
+  compile_script: ./build.sh
+  tests_script: ./bin/ls_extended
+
+task:
+  name: macOS Mojave apple llvm 10.0.1
+  osx_instance:
+    image: mojave-base
+  compile_script: ./build.sh
+  tests_script: ./bin/ls_extended
