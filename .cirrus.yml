@@ -4,6 +4,7 @@ task:
     image: ubuntu:14.04
   env:
     COMPILER: gcc-4.8
+  install_script: apt-get install -y gcc
   compile_script: ./build.sh
   tests_script: ./bin/ls_extended
 
