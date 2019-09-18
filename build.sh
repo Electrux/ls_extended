@@ -35,4 +35,4 @@ fi
 echo "Building ..."
 
 buildfiles=$(find buildfiles -name "*.c.o" | paste -sd " " -)
-$compiler -O2 -std=c11 -g -o bin/ls_extended src/main.c $buildfiles -I/usr/local/include -L/usr/local/lib
+$compiler -O2 -std=gnu99 -g -o bin/ls_extended src/main.c $buildfiles -I/usr/local/include -L/usr/local/lib
