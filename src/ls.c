@@ -58,11 +58,7 @@ int ls( const struct winsize * ws, const char * loc, size_t flags, int loc_count
 	struct stat tmp_st;
 	int tmp_st_res = stat( final_loc, & tmp_st );
 	if( tmp_st_res != 0 ) {
-		if( errno == ENOENT ) {
-			disp( stdout, "{s}Given path {r}%s{s} does not exist {0}({p}ENOENT{0})\n", final_loc );
-		} else {
-			disp( stdout, "{p}Something went wrong in fetching information of {r}%s{0}, {p}error{0}: {s}%d\n", final_loc, errno );
-		}
+		disp( stdout, "{p}Could not fetch information of {r}%s{0} ({p}%s{0})\n", final_loc, strerror( errno ) );
 		return errno;
 	}
 	if( !S_ISDIR( tmp_st.st_mode ) ) {
@@ -109,11 +105,15 @@ int ls( const struct winsize * ws, const char * loc, size_t flags, int loc_count
 
 	char currdir[ MAX_STR_LEN ];
 	getcwd( currdir, MAX_STR_LEN - 1 );
-	chdir( final_loc );
+	int cd_res = chdir( final_loc );
+	if( cd_res != 0 ) {
+		disp( stderr, "{p}Unable to open directory{0}: {r}%s{0} ({p}%s{0})\n", final_loc, strerror( errno ) );
+		return LOC_NOT_OPENED;
+	}
 
 	DIR * dir = opendir( "." );
 	if( dir == NULL ) {
-		disp( stderr, "{p}Unable to open directory{0}: {r}%s{0}\n", final_loc );
+		disp( stderr, "{p}Unable to open directory{0}: {r}%s{0} ({p}%s{0})\n", final_loc, strerror( errno ) );
 		return LOC_NOT_OPENED;
 	}
 
