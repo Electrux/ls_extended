@@ -56,7 +56,12 @@ void disp_long( vec_t * locs, const struct winsize * ws, const max_lens_t * maxl
 
 		// last modified time
 		char mtime[ 30 ];
-		strftime( mtime, 30, "%h %e %H:%M", gmtime( & stats->st.st_mtime ) );
+		if( flags & OPT_CAPS_I ) {
+			// long-iso format
+			strftime( mtime, 30, "%Y-%m-%d %H:%M", localtime( & stats->st.st_mtime ) );
+		} else {
+			strftime( mtime, 30, "%h %e %H:%M", localtime( & stats->st.st_mtime ) );
+		}
 		disp( stdout, "{m}%s ", mtime );
 
 		// file/folder name

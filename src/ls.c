@@ -43,7 +43,7 @@ int ls( const struct winsize * ws, const char * loc, size_t flags, int loc_count
 {
 	char final_loc[ MAX_STR_LEN ];
 	if( strlen( loc ) + 1 > MAX_STR_LEN ) {
-		disp( stderr, "error: too long location string length (max %d charactersd)", MAX_STR_LEN - 1 );
+		disp( stderr, "error: too long location string length (max %d characters)", MAX_STR_LEN - 1 );
 		return EXIT_FAILURE;
 	}
 	strcpy( final_loc, loc );
@@ -53,6 +53,7 @@ int ls( const struct winsize * ws, const char * loc, size_t flags, int loc_count
 		flags &= ~OPT_G;
 		flags &= ~OPT_H;
 		flags &= ~OPT_I;
+		flags &= ~OPT_CAPS_I;
 	}
 
 	struct stat tmp_st;
