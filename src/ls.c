@@ -23,6 +23,7 @@
 #include <errno.h>
 #include <grp.h>
 #include <pwd.h>
+#include <libgen.h>
 
 #include "cmdopts.h"
 #include "sorts.h"
@@ -34,7 +35,9 @@
 #define MAX_LINK_JUMP_COUNT 32
 
 static vec_t * generate_file_vec( DIR * dir, max_lens_t * maxlens, const char * base_loc, const size_t flags );
+// saves current working directory and reverts to it and the end
 static int get_stats( const char * path, stat_info_t * stats );
+static int _get_stats( const char * path, stat_info_t * stats );
 static void reset_stats( stat_info_t * stats );
 static void update_data_and_max_lens( stat_info_t * stats, max_lens_t * maxlens, const size_t flags );
 static void format_file_size( const size_t size, char * res );
@@ -243,18 +246,37 @@ fail:
 	return NULL;
 }
 
+// saves current working directory and reverts to it and the end
 static int get_stats( const char * path, stat_info_t * stats )
+{
+	char currdir[ MAX_STR_LEN ];
+	getcwd( currdir, MAX_STR_LEN - 1 );
+
+	int err = _get_stats( path, stats );
+
+	int cd_res = chdir( currdir );
+	if( cd_res != 0 ) {
+		disp( stderr, "{p}Unable to open directory{0}: {r}%s{0} ({p}%s{0})\n", currdir, strerror( errno ) );
+		return LOC_NOT_OPENED;
+	}
+	return err;
+}
+
+static int _get_stats( const char * path, stat_info_t * stats )
 {
 	struct stat tmp_st;
 	int temp_res = lstat( path, & tmp_st );
-	if( stats->lnk_jumps == 0 ) memcpy( & stats->st, & tmp_st, sizeof( struct stat ) );
 
-	if( stats->lnk_jumps == 0 && temp_res != 0 ) {
-		fprintf( stderr, "error: errno %d for path: %s\n", errno, path );
-		return errno;
+	if( stats->lnk_jumps == 0 ) {
+		if( temp_res != 0 ) {
+			fprintf( stderr, "error: errno %d for path: %s\n", errno, path );
+			return errno;
+		}
+		memcpy( & stats->st, & tmp_st, sizeof( struct stat ) );
 	}
 
 	if( stats->lnk_jumps >= 1 && temp_res != 0 ) {
+dead_link:
 		stats->lnk_is_dead = true;
 		// set the link stats to be same as the file's stats
 		memcpy( & stats->lnk_st, & stats->st, sizeof( struct stat ) );
@@ -274,7 +296,14 @@ static int get_stats( const char * path, stat_info_t * stats )
 		if( ( len = readlink( path, buf, sizeof( buf ) - 1 ) ) != -1 ) {
 			buf[ len ] = '\0';
 			if( stats->lnk_jumps == 1 ) strcpy( stats->lnk_loc, buf );
-			int res = get_stats( buf, stats );
+
+			char jump_dir[ MAX_STR_LEN ];
+			dirname_r( buf, jump_dir );
+			char jump_file[ MAX_STR_LEN ];
+			basename_r( buf, jump_file );
+			int cd_res = chdir( jump_dir );
+			if( cd_res != 0 ) goto dead_link;
+			int res = get_stats( jump_file, stats );
 			return res;
 		}
 
