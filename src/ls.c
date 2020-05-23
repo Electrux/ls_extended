@@ -298,9 +298,9 @@ dead_link:
 			if( stats->lnk_jumps == 1 ) strcpy( stats->lnk_loc, buf );
 
 			char jump_dir[ MAX_STR_LEN ];
-			dirname_r( buf, jump_dir );
+			strcpy( jump_dir, dirname( buf ) );
 			char jump_file[ MAX_STR_LEN ];
-			basename_r( buf, jump_file );
+			strcpy( jump_file, basename( buf ) );
 			int cd_res = chdir( jump_dir );
 			if( cd_res != 0 ) goto dead_link;
 			int res = get_stats( jump_file, stats );
