@@ -27,18 +27,11 @@ Where ls_extended is the binary of this program which must be built.
 
 This project is available on AUR under the name `ls_extended`.
 
-### With CCP4M
+### Manual Build
 
-The project uses CCP4M build system which is located [here](https://github.com/Electrux/ccp4m).
-The installation instructions for CCP4M are in its own repository.
+To install `ls_extended`, execute the following shell script in the project's root directory (This will not compile the tests though):
+```bash
+./build.sh
+```
 
-Once it is installed, just use `ccp4m project build` to build the code. The executable will be generated in the `bin/` directory of the project and you can then copy it to your PATH (`/usr/bin/`, `/usr/local/bin/` etc).
-
-
-### Without CCP4M
-
-To install without CCP4M, execute the following shell script in the project's root directory (This will not compile the tests though):
-
-`./build.sh`
-
-This will generate an executable in bin directory named `ls_extended`. Just copy it to your PATH.
+This will generate an executable in `bin` directory named `ls_extended`. Just copy it to your `$PATH`.
