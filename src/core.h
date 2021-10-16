@@ -15,7 +15,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-static const int VERSION_MAIN = 2;
+static const int VERSION_MAIN = 1;
 static const int VERSION_SUB = 0;
 static const int VERSION_PATCH = 0;
 
