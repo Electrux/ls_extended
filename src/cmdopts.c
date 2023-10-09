@@ -25,6 +25,12 @@ size_t get_cmd_opts( const int argc, const char ** argv, vec_t * locs )
 		}
 
 		size_t len = strlen( argv[ i ] );
+		if( len > 1 && argv[ i ][ 1 ] == '-' ) {
+			if( strcmp( argv[ i ], "--help" ) == 0 ) flags |= OPT_H;
+			if( strcmp( argv[ i ], "--version" ) == 0 ) flags |= OPT_V;
+			continue;
+		}
+
 		for( size_t j = 1; j < len; ++j ) {
 			if( argv[ i ][ j ] == 'a' ) flags |= OPT_A;
 			else if( argv[ i ][ j ] == 'A' ) flags |= OPT_CAPS_A;
