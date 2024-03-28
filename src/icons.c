@@ -68,16 +68,16 @@ const char * get_dir_icon( const char * dir, const bool is_link )
 	else if( BEGINS( dir, ".mix" ) ) return "\ue62d";
 	else if( BEGINS( dir, ".npm, node_modules" ) ) return "\ue5fa";
 	else if( BEGINS( dir, ".vs, .vscode" ) ) return "\ue70c";
-	else if( BEGINS( dir, ".weechat" ) ) return "\ufbee";
-	else if( BEGINS( dir, "application" ) ) return "\ufb13";
+	else if( BEGINS( dir, ".weechat" ) ) return "\uf448";
+	else if( BEGINS( dir, "application" ) ) return "\uf2d0";
 	else if( BEGINS( dir, "bin, config" ) ) return "\ue5fc";
 	else if( BEGINS( dir, "desktop" ) ) return "\uf108";
-	else if( BEGINS( dir, "download" ) ) return "\uf74c";
-	else if( BEGINS( dir, "library" ) ) return "\uf830";
-	else if( BEGINS( dir, "movie" ) ) return "\uf880";
-	else if( BEGINS( dir, "music, songs, audio" ) ) return "\uf832";
+	else if( BEGINS( dir, "download" ) ) return "\uf409";
+	else if( BEGINS( dir, "library" ) ) return "\uf02e";
+	else if( BEGINS( dir, "movie" ) ) return "\uf008";
+	else if( BEGINS( dir, "music, songs, audio" ) ) return "\uf001";
 	else if( BEGINS( dir, "photo, picture" ) ) return "\uf03e";
-	else if( IS( dir, "__pycache__" ) ) return "\uf81f";
+	else if( IS( dir, "__pycache__" ) ) return "\ue606";
 	else if( BEGINS( dir, "video" ) ) return "\uf03d";
 
 	if( is_link ) return DEFAULT_LINK_DIR_ICON;
@@ -93,7 +93,7 @@ static const char * get_file_icon_by_ext( const char * ext, const bool is_link )
 
 	// Configuration
 
-	else if( IS( ext, "json" ) ) return "\ufb25";
+	else if( IS( ext, "json" ) ) return "\ue60b";
 	else if( IS( ext, "lock" ) ) return "\uf023";
 	else if( IS( ext, "ini, yaml, yml, env, toml" ) ) return "\ue615";
 
@@ -101,11 +101,11 @@ static const char * get_file_icon_by_ext( const char * ext, const bool is_link )
 
 	else if( IS( ext, "html" ) ) return "\ue60e";
 	else if( IS( ext, "md" ) ) return "\ue73e";
-	else if( IS( ext, "xml, ui" ) ) return "\ufabf";
+	else if( IS( ext, "xml, ui" ) ) return "\ue796";
 
 	// Git
 
-	else if( BEGINS( ext, "git" ) ) return "\uf7a3";
+	else if( BEGINS( ext, "git" ) ) return "\uf09b";
 
 	// Terminal stuff
 
@@ -120,20 +120,20 @@ static const char * get_file_icon_by_ext( const char * ext, const bool is_link )
 	// lossless
 	else if( IS( ext, LOSSLESS_AUDIO ) ) return "\uf001";
 	//lossy
-	else if ( IS( ext, LOSSY_AUDIO ) ) return "\ufc58";
+	else if ( IS( ext, LOSSY_AUDIO ) ) return "\uf001";
 	// playlist
-	else if ( IS ( ext, PLAYLIST ) ) return "\uf910";
+	else if ( IS ( ext, PLAYLIST ) ) return "\uf04b";
 	
 	// Video
 	else if ( IS( ext, VIDEO ) ) return "\uf03d";
 	// Languages
 
 	// C, C++
-	else if( IS( ext, "h, hh,hpp,hxx, h++" ) ) return "\ufd27";
-	else if( IS( ext, "c" ) ) return "\ufb70";
-	else if( IS( ext, "cc, cpp, cxx, c++" ) ) return "\ufb71";
+	else if( IS( ext, "h, hh,hpp,hxx, h++" ) ) return "\uf0fd";
+	else if( IS( ext, "c" ) ) return "\ue649";
+	else if( IS( ext, "cc, cpp, cxx, c++" ) ) return "\ue646";
 	// C#
-	else if( IS( ext, "cs" ) ) return "\uf81a";
+	else if( IS( ext, "cs" ) ) return "\ue648";
 	// Closure
 	else if( IS( ext, "clj, cljs, cljc, edn" ) ) return "\ue76a";
 	// Coffeescript
@@ -163,7 +163,7 @@ static const char * get_file_icon_by_ext( const char * ext, const bool is_link )
 	// Prolog
 	else if( IS( ext, "pro, P" ) ) return "\ue7a1";
 	// Python
-	else if( IS( ext, "py, pyc, pyd, pyx" ) ) return "\uf81f";
+	else if( IS( ext, "py, pyc, pyd, pyx" ) ) return "\ue606";
 	// Ruby
 	else if( IS( ext, "rb" ) ) return "\ue739";
 	// Rust
@@ -173,7 +173,7 @@ static const char * get_file_icon_by_ext( const char * ext, const bool is_link )
 	// Switft
 	else if( IS( ext, "swift" ) ) return "\ue755";
 	// Typescript
-	else if( IS( ext, "ts, tsx" ) ) return "\ufbe4";
+	else if( IS( ext, "ts, tsx" ) ) return "\ue69d";
 
 	if( is_link ) return DEFAULT_LINK_FILE_ICON;
 	return DEFAULT_FILE_ICON;
