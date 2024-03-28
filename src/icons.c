@@ -160,6 +160,8 @@ static const char * get_file_icon_by_ext( const char * ext, const bool is_link )
 	else if( IS( ext, "lua" ) ) return "\ue620";
 	// Perl
 	else if( IS( ext, "pl, pm, t, pod" ) ) return "\ue769";
+	// PHP
+	else if( IS( ext, "php, php3, php4, php5, phtml, phar" ) ) return "\ue73d";
 	// Prolog
 	else if( IS( ext, "pro, P" ) ) return "\ue7a1";
 	// Python
