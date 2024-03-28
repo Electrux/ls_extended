@@ -56,7 +56,7 @@ const char * get_file_icon( const char * name, const char * ext, const bool is_l
 
 const char * get_dir_icon( const char * dir, const bool is_link )
 {
-	if( BEGINS( dir, ".git, git" ) ) return "\ue5fd";
+	if( BEGINS( dir, ".git, git" ) ) return "\ue5fb";
 	else if( BEGINS( dir, ".trash, trash" ) ) return "\uf1f8";
 	else if( BEGINS( dir, ".bash" ) ) return "\ue795";
 	else if( BEGINS( dir, ".bundle, .gem" ) ) return "\ue739";
@@ -105,7 +105,7 @@ static const char * get_file_icon_by_ext( const char * ext, const bool is_link )
 
 	// Git
 
-	else if( BEGINS( ext, "git" ) ) return "\uf09b";
+	else if( BEGINS( ext, "git" ) ) return "\ue702";
 
 	// Terminal stuff
 
