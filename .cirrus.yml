@@ -1,35 +1,20 @@
 task:
-  name: Ubuntu 14.04 gcc 4.8.4
+  name: Debian Linux
   container:
-    image: ubuntu:14.04
-  install_script: apt-get update && apt-get install -y gcc
+    image: gcc:latest
   compile_script: ./build.sh
   tests_script: ./bin/ls_extended
 
 task:
-  name: Ubuntu 14.04 clang 3.4.0
-  container:
-    image: teeks99/clang-ubuntu:3.4
-  compile_script: ./build.sh
-  tests_script: ./bin/ls_extended
-
-task:
-  name: Debian 8 gcc 6.5.0
-  container:
-    image: gcc:6
-  compile_script: ./build.sh
-  tests_script: ./bin/ls_extended
-
-task:
-  name: FreeBSD 10.4 clang 3.4.1
+  name: FreeBSD 14.0
   freebsd_instance:
-    image: freebsd-10-4-release-amd64
+    image_family: freebsd-14-0
   compile_script: ./build.sh
   tests_script: ./bin/ls_extended
 
 task:
-  name: macOS Mojave apple llvm 10.0.1
-  osx_instance:
-    image: mojave-base
+  name: macOS Sonoma
+  macos_instance:
+    image: ghcr.io/cirruslabs/macos-sonoma-base:latest
   compile_script: ./build.sh
   tests_script: ./bin/ls_extended
