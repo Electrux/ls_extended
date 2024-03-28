@@ -184,7 +184,7 @@ static const char * get_file_icon_by_ext( const char * ext, const bool is_link )
 static const char * get_file_icon_by_name( const char * name, const bool is_link )
 {
 	// Development
-	if( BEGINS( name, "Makefile" ) ) return "\ue779";
+	if( BEGINS( name, "Makefile" ) ) return "\ue673";
 	else if( BEGINS( name, "Dockerfile, docker-compose" ) ) return "\uf308";
 
 	// Other
