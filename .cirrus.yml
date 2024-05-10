@@ -9,7 +9,7 @@ task:
   name: FreeBSD 14.0
   freebsd_instance:
     image_family: freebsd-14-0
-  compile_script: pkg install bash && ./build.sh
+  compile_script: pkg install -y bash && ./build.sh
   tests_script: ./bin/ls_extended
 
 task:
