@@ -10,35 +10,36 @@
 #ifndef COLOR_H
 #define COLOR_H
 
-enum COLOR_IDS {
+enum COLOR_IDS
+{
 	COL_RESET, // 0
 
-	COL_RED, // r
-	COL_GREEN, // g
-	COL_YELLOW, // y
-	COL_BLUE, // b
+	COL_RED,     // r
+	COL_GREEN,   // g
+	COL_YELLOW,  // y
+	COL_BLUE,    // b
 	COL_MAGENTA, // m
-	COL_CYAN, // c
-	COL_WHITE, // w
+	COL_CYAN,    // c
+	COL_WHITE,   // w
 
-	COL_BOLD_RED, // br
-	COL_BOLD_GREEN, // bg
-	COL_BOLD_YELLOW, // by
-	COL_BOLD_BLUE, // bb
+	COL_BOLD_RED,	  // br
+	COL_BOLD_GREEN,	  // bg
+	COL_BOLD_YELLOW,  // by
+	COL_BOLD_BLUE,	  // bb
 	COL_BOLD_MAGENTA, // bm
-	COL_BOLD_CYAN, // bc
-	COL_BOLD_WHITE, // bw
+	COL_BOLD_CYAN,	  // bc
+	COL_BOLD_WHITE,	  // bw
 
-	COL_PRIMARY, // p
+	COL_PRIMARY,   // p
 	COL_SECONDARY, // s
-	COL_TERTIARY, // t
-	COL_EXTRA, // e
+	COL_TERTIARY,  // t
+	COL_EXTRA,     // e
 
 	COL_LAST,
 };
 
-extern const char * COLORS[ COL_LAST ];
+extern const char *COLORS[COL_LAST];
 
-const char * get_col( const char * id );
+const char *get_col(const char *id);
 
 #endif // COLOR_H

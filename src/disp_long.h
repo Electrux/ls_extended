@@ -12,9 +12,10 @@
 
 #include <stdlib.h>
 
-#include "vec.h"
 #include "ls.h"
+#include "vec.h"
 
-void disp_long( vec_t * locs, const struct winsize * ws, const max_lens_t * maxlens, const size_t flags );
+void disp_long(vec_t *locs, const struct winsize *ws, const max_lens_t *maxlens,
+	       const size_t flags);
 
 #endif // DISP_LONG_H
