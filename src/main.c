@@ -43,6 +43,7 @@ int main(int argc, char **argv)
 	if(flags & OPT_V) {
 		disp(stdout, "{p}ls extended version{0}: {s}%d{0}.{s}%d{0}.{s}%d{0}\n",
 		     VERSION_MAIN, VERSION_SUB, VERSION_PATCH);
+		vec_destroy(&locs);
 		return 0;
 	}
 
@@ -58,5 +59,5 @@ int main(int argc, char **argv)
 		if(res != 0) break;
 	}
 	vec_destroy(&locs);
-	return 0;
+	return res;
 }
