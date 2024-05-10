@@ -1,22 +1,10 @@
-/*
-	Copyright (c) 2019, Electrux
-	All rights reserved.
-	Using the BSD 3-Clause license for the project,
-	main LICENSE file resides in project's root directory.
-	Please read that file and understand the license terms
-	before using or altering the project.
-*/
-
 // The checking is NOT case sensitive
 
 #include "icons.h"
 
 #include <stdarg.h>
-#include <stdbool.h>
 #include <string.h>
 #include <strings.h>
-
-#include "core.h"
 
 // Default file icon is text file or normal link file
 #define DEFAULT_FILE_ICON "\uf15c"

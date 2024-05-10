@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 
-set(CMAKE_BUILD_TYPE "RelWithDebInfo"
-	CACHE STRING "CMake Build Type")
+set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING "CMake Build Type")
 
 project(ls_extended
 	VERSION 2.0.0
@@ -27,9 +26,7 @@ install(TARGETS ls_extended RUNTIME DESTINATION bin)
 set(CPACK_GENERATOR "RPM;DEB;TGZ;7Z;ZIP")
 set(CPACK_PACKAGING_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
-set(CPACK_PACKAGE_CONTACT "Noone <noone@localhost.local>"
-	CACHE STRING "(CPack) Package Contact")
-set(CPACK_DEBIAN_PACKAGE_MAINTAINER ""
-	CACHE STRING "(CPack) DEB Package Maintainer")
+set(CPACK_PACKAGE_CONTACT "Noone <noone@localhost.local>" CACHE STRING "(CPack) Package Contact")
+set(CPACK_DEBIAN_PACKAGE_MAINTAINER "" CACHE STRING "(CPack) DEB Package Maintainer")
 set(CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION /usr/local /usr/local/bin)
 include(CPack)
