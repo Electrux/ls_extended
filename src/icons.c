@@ -37,6 +37,10 @@ static bool find_in(const char *of, const char *values, bool is_exact_match);
 
 #define VIDEO "avi, flv, mkv, mov, mp4, ogv, webm"
 
+#define MODEL_3D 															  \
+	"obj, gltf, glb, blend, 3ds, ase, dae, vta, mdl, md2, md3, mdc, md5mesh, " \
+	"md5anim, md5camera, irr, irrmesh, ply, ac3d, vtk"
+
 static const bool is_default_icon(const char *icon)
 {
 	return strcmp(icon, DEFAULT_FILE_ICON) == 0 || strcmp(icon, DEFAULT_LINK_FILE_ICON) == 0;
@@ -128,6 +132,10 @@ static const char *get_file_icon_by_ext(const char *ext, const bool is_link)
 
 	// Video
 	else if(IS(ext, VIDEO)) return "\uf03d";
+
+	// 3d Models and related
+	else if(IS(ext, MODEL_3D)) return "\uf1b2";
+
 	// Languages
 
 	// C, C++
