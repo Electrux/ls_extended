@@ -5,6 +5,7 @@
 #include <stdarg.h>
 #include <string.h>
 #include <strings.h>
+#include <stdio.h>
 
 // Default file icon is text file or normal link file
 #define DEFAULT_FILE_ICON "\uf15c"
@@ -117,6 +118,9 @@ static const char *get_file_icon_by_ext(const char *ext, const bool is_link)
 
 	// Databases
 	else if(IS(ext, "sql, sqlite")) return "\ue706";
+
+	// Archive
+	else if(IS(ext, "zip, rar, 7z, tar, a, ar, cab, pk3")) return "\uf187";
 
     // Image
     else if(IS(ext, BITMAP_IMAGE)) return "\ue60d";
