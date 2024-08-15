@@ -98,7 +98,7 @@ static const char *get_file_icon_by_ext(const char *ext, const bool is_link)
 
 	else if(IS(ext, "json")) return "\ue60b";
 	else if(IS(ext, "lock")) return "\uf023";
-	else if(IS(ext, "ini, yaml, yml, env, toml")) return "\ue615";
+	else if(IS(ext, "ini, yaml, yml, env, toml, conf, cfg")) return "\ue615";
 
 	// Data handling / manipulation
 
@@ -112,15 +112,18 @@ static const char *get_file_icon_by_ext(const char *ext, const bool is_link)
 
 	// Terminal stuff
 
-	else if(IS(ext, "zsh, bash, sh")) return "\ue795";
+	else if(IS(ext, "zsh, bash, sh, ps1")) return "\ue795";
 	else if(BEGINS(ext, "zsh, bash")) return "\ue615";
 	else if(BEGINS(ext, "vim")) return "\ue7c5";
 
 	// Databases
-	else if(IS(ext, "sql, sqlite")) return "\ue706";
+	else if(IS(ext, "sql, sqlite, db")) return "\ue706";
 
 	// Archive
 	else if(IS(ext, "zip, rar, 7z, tar, a, ar, cab, pk3")) return "\uf187";
+	
+	// Fonts
+	else if(IS(ext, "ttf, otf, woff, woff2, eot")) return "\ue659";
 
     // Image
     else if(IS(ext, BITMAP_IMAGE)) return "\ue60d";
@@ -190,6 +193,17 @@ static const char *get_file_icon_by_ext(const char *ext, const bool is_link)
 	else if(IS(ext, "swift")) return "\ue755";
 	// Typescript
 	else if(IS(ext, "ts, tsx")) return "\ue69d";
+	// Qt stuff
+	else if(IS(ext, "qml, qrc, qsb, qss")) return "\uf375";
+
+	// Misc.
+	else if(IS(ext, "pdf")) return "\ue67d";
+	else if(IS(ext, "torrent")) return "\uf0ec";
+	else if(IS(ext, "log")) return "\uf1ea";
+	else if(IS(ext, "exe")) return "\ue70f";
+	else if(IS(ext, "cache")) return "\uf49b";
+	else if(IS(ext, "sln")) return "\ue70c";
+	else if(IS(ext, "desktop")) return "\uf108";
 
 	if(is_link) return DEFAULT_LINK_FILE_ICON;
 	return DEFAULT_FILE_ICON;
@@ -198,11 +212,14 @@ static const char *get_file_icon_by_ext(const char *ext, const bool is_link)
 static const char *get_file_icon_by_name(const char *name, const bool is_link)
 {
 	// Development
-	if(BEGINS(name, "Makefile")) return "\ue673";
+	if(BEGINS(name, "Makefile, CMake")) return "\ue673";
 	else if(BEGINS(name, "Dockerfile, docker-compose")) return "\uf308";
 
 	// Other
 	if(BEGINS(name, "LICENSE, license, copying, COPYING")) return "\uf2c2";
+	else if(BEGINS(name, "AUTHOR, author, CONTRIBUTOR, contributor")) return "\uf4fd";
+	else if(IS(name, "config")) return "\ue615";
+	else if(IS(name, "TODO, todo, TODO.txt, todo.txt")) return "\ue69c";
 	// TODO:
 	if(is_link) return DEFAULT_LINK_FILE_ICON;
 	return DEFAULT_FILE_ICON;
