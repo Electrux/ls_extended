@@ -21,6 +21,11 @@ static bool find_in(const char *of, const char *values, bool is_exact_match);
 #define IS(of, values) find_in(of, values, true)
 #define BEGINS(of, values) find_in(of, values, false)
 
+#define BITMAP_IMAGE                                                           \
+    "png, jpg, jpeg, gif, webp, bmp, ppm, pgm, pbm, pnm, tiff, ico, xbm, xpm" \
+	"tga, avif, jp2, j2k, jxl, qoi, ktx, dds, wal"
+#define VECTOR_IMAGE "svg, ai, eps"
+
 #define LOSSLESS_AUDIO                                                                          \
 	"8svx, iff, aiff, aif, aifc, au, snd, bwf, wav, wave, cdda, raw, pcm, sam, ra, ram, "   \
 	"flac, la, pac, ape, ofr, ofs, off, rka, shn, tak, tta, wv, brstm, dts, dtshd, dtsma, " \
@@ -108,6 +113,10 @@ static const char *get_file_icon_by_ext(const char *ext, const bool is_link)
 
 	// Databases
 	else if(IS(ext, "sql, sqlite")) return "\ue706";
+
+    // Image
+    else if(IS(ext, BITMAP_IMAGE)) return "\ue60d";
+    else if(IS(ext, VECTOR_IMAGE)) return "\uee24";
 
 	// Audio
 	// lossless
