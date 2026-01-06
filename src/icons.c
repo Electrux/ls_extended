@@ -75,7 +75,7 @@ const char *get_dir_icon(const char *dir, const bool is_link)
 	else if(BEGINS(dir, "application")) return "\uf2d0";
 	else if(BEGINS(dir, "bin, config")) return "\ue5fc";
 	else if(BEGINS(dir, "desktop")) return "\uf108";
-	else if(BEGINS(dir, "download")) return "\uf409";
+	else if(BEGINS(dir, "download")) return "\U000f024d";
 	else if(BEGINS(dir, "library")) return "\uf02e";
 	else if(BEGINS(dir, "movie")) return "\uf008";
 	else if(BEGINS(dir, "music, songs, audio")) return "\uf001";
